@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS & Terraform Interaktives Lernportal</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        html, body {
+            min-height: 100%;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #0f172a;
+            color: #f8fafc;
+            font-family: inherit;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        button, input {
+            font: inherit;
+        }
+        .bg-slate-900 { background: #0f172a; }
+        .bg-slate-850 { background: #111827; }
+        .bg-slate-800 { background: #1f2937; }
+        .bg-slate-700 { background: #374151; }
+        .bg-slate-600 { background: #4b5563; }
+        .bg-slate-400 { color: #94a3b8; }
+        .bg-slate-300 { color: #cbd5e1; }
+        .bg-amber-500 { background: #f59e0b; }
+        .bg-amber-400 { color: #fbbf24; }
+        .bg-emerald-500 { background: #10b981; }
+        .bg-emerald-500\/10 { background: rgba(16, 185, 129, 0.1); }
+        .bg-emerald-300 { color: #6ee7b7; }
+        .text-emerald-500 { color: #10b981; }
+        .text-amber-500 { color: #f59e0b; }
+        .text-slate-500 { color: #64748b; }
+        .text-slate-600 { color: #475569; }
+        .antialiased { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .block { display: block; }
+        .border { border-width: 1px; border-style: solid; }
+        .border-2 { border-width: 2px; }
+        .border-b { border-bottom-width: 1px; }
+        .border-t { border-top-width: 1px; }
+        .lg\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+        .md\:text-left { text-align: left; }
+        .space-y-0\.5 > * + * { margin-top: 0.125rem; }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+        .shadow-lg { box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15); }
+        .list-disc { list-style: disc outside; padding-left: 1.25rem; }
+        .pl-9 { padding-left: 2.25rem; }
+        .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+        .px-8 { padding-left: 2rem; padding-right: 2rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .pb-3 { padding-bottom: 0.75rem; }
+        .pt-4 { padding-top: 1rem; }
+        .w-4 { width: 1rem; }
+        .w-5 { width: 1.25rem; }
+        .w-3\.5 { width: 0.875rem; }
+        .h-4 { height: 1rem; }
+        .h-5 { height: 1.25rem; }
+        .h-3\.5 { height: 0.875rem; }
+        .left-3 { left: 0.75rem; }
+        .top-3 { top: 0.75rem; }
+        .transition-opacity { transition: opacity 0.2s ease-in-out; }
+        .duration-300 { transition-duration: 300ms; }
+        .cursor-pointer { cursor: pointer; }
+        .focus\:outline-none:focus { outline: none; }
+        .focus\:border-amber-500:focus { border-color: #f59e0b; }
+        .focus\:ring-amber-500:focus { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25); }
+        .placeholder-slate-400::placeholder { color: #94a3b8; }
+        .lg\:col-span-5 { grid-column: span 5 / span 5; }
+        .lg\:col-span-7 { grid-column: span 7 / span 7; }
+        .shrink-0 { flex-shrink: 0; }
+        .opacity-20 { opacity: 0.2; }
+        .z-10 { z-index: 10; }
+        .leading-relaxed { line-height: 1.75; }
+        .leading-tight { line-height: 1.25; }
+        .rounded { border-radius: 0.25rem; }
+        .rounded-md { border-radius: 0.375rem; }
+        .bg-amber-500\/10 { background: rgba(245, 158, 11, 0.1); }
+        .bg-slate-900\/50 { background: rgba(15, 23, 42, 0.5); }
+        .border-emerald-900\/50 { border-color: rgba(16, 185, 129, 0.5); }
+        .hover\:bg-amber-600:hover { background: #d97706; }
+        .hover\:border-slate-600:hover { border-color: #475569; }
+        .hover\:border-amber-500\/50:hover { border-color: rgba(245, 158, 11, 0.5); }
+        .text-slate-200 { color: #e2e8f0; }
+        .text-slate-400 { color: #94a3b8; }
+        .text-slate-900 { color: #0f172a; }
+        .text-amber-400 { color: #fbbf24; }
+        .text-emerald-300 { color: #6ee7b7; }
+        .text-emerald-400 { color: #34d399; }
+        .border { border-width: 1px; border-style: solid; }
+        .border-slate-700 { border-color: #334155; }
+        .border-slate-600 { border-color: #475569; }
+        .border-slate-800 { border-color: #1f2937; }
+        .border-emerald-500 { border-color: #10b981; }
+        .border-b { border-bottom-width: 1px; }
+        .border-t { border-top-width: 1px; }
+        .rounded-lg { border-radius: 0.75rem; }
+        .rounded-xl { border-radius: 1rem; }
+        .rounded-2xl { border-radius: 1.5rem; }
+        .rounded-full { border-radius: 9999px; }
+        .shadow-md { box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15); }
+        .shadow-xl { box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15); }
+        .shadow-2xl { box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25); }
+        .shadow-emerald-950\/20 { box-shadow: 0 20px 25px rgba(4, 120, 87, 0.2); }
+        .flex { display: flex; }
+        .flex-1 { flex: 1 1 0%; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .gap-1 { gap: 0.25rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .gap-8 { gap: 2rem; }
+        .w-full { width: 100%; }
+        .w-80 { width: 20rem; }
+        .w-6 { width: 1.5rem; }
+        .h-full { height: 100%; }
+        .h-screen { height: 100vh; }
+        .h-16 { height: 4rem; }
+        .h-2 { height: 0.5rem; }
+        .h-96 { height: 24rem; }
+        .min-w-0 { min-width: 0; }
+        .max-w-4xl { max-width: 56rem; }
+        .max-w-6xl { max-width: 72rem; }
+        .max-w-md { max-width: 28rem; }
+        .max-w-none { max-width: none; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+        .p-2 { padding: 0.5rem; }
+        .p-3 { padding: 0.75rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .p-8 { padding: 2rem; }
+        .pl-3 { padding-left: 0.75rem; }
+        .pl-5 { padding-left: 1.25rem; }
+        .pl-9 { padding-left: 2.25rem; }
+        .pr-2 { padding-right: 0.5rem; }
+        .pr-4 { padding-right: 1rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .font-bold { font-weight: 700; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+        .uppercase { text-transform: uppercase; }
+        .tracking-wider { letter-spacing: 0.08em; }
+        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .select-none { user-select: none; }
+        .transition-all { transition: all 0.2s ease-in-out; }
+        .transition-colors { transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out; }
+        .transition-opacity { transition: opacity 0.2s ease-in-out; }
+        .duration-300 { transition-duration: 300ms; }
+        .cursor-pointer { cursor: pointer; }
+        .font-black { font-weight: 900; }
+        .font-sans { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+        .border-r { border-right-width: 1px; }
+        .border-emerald-900\/50 { border-color: rgba(16, 185, 129, 0.5); }
+        .bg-amber-500\/10 { background: rgba(245, 158, 11, 0.1); }
+        .bg-emerald-500\/10 { background: rgba(16, 185, 129, 0.1); }
+        .bg-slate-800\/50 { background: rgba(31, 41, 55, 0.5); }
+        .hover\:bg-slate-800:hover { background: #1f2937; }
+        .hover\:bg-slate-600:hover { background: #4b5563; }
+        .hover\:bg-amber-600:hover { background: #d97706; }
+        .hover\:border-slate-600:hover { border-color: #475569; }
+        .hover\:border-amber-500\/50:hover { border-color: rgba(245, 158, 11, 0.5); }
+        .hover\:text-slate-200:hover { color: #e2e8f0; }
+        .focus\:outline-none:focus { outline: none; }
+        .focus\:border-amber-500:focus { border-color: #f59e0b; }
+        .focus\:ring-amber-500:focus { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25); }
+        .placeholder-slate-400::placeholder { color: #94a3b8; }
+        .list-disc { list-style: disc outside; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .lg\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+        .lg\:col-span-5 { grid-column: span 5 / span 5; }
+        .lg\:col-span-7 { grid-column: span 7 / span 7; }
+        .md\:text-left { text-align: left; }
+        .space-y-0\.5 > * + * { margin-top: 0.125rem; }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+        .pb-3 { padding-bottom: 0.75rem; }
+        .pt-4 { padding-top: 1rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+        .px-8 { padding-left: 2rem; padding-right: 2rem; }
+        .left-3 { left: 0.75rem; }
+        .top-3 { top: 0.75rem; }
+        .rounded { border-radius: 0.25rem; }
+        .rounded-md { border-radius: 0.375rem; }
+        .shrink-0 { flex-shrink: 0; }
+        .opacity-20 { opacity: 0.2; }
+        .z-10 { z-index: 10; }
+        .w-5 { width: 1.25rem; }
+        .w-4 { width: 1rem; }
+        .w-3\.5 { width: 0.875rem; }
+        .h-6 { height: 1.5rem; }
+        .h-5 { height: 1.25rem; }
+        .h-4 { height: 1rem; }
+        .h-3\.5 { height: 0.875rem; }
+        .leading-relaxed { line-height: 1.75; }
+        .leading-tight { line-height: 1.25; }
+        .hover\:bg-slate-800:hover { background: #1f2937; }
+        .hover\:bg-slate-600:hover { background: #4b5563; }
+        .hover\:text-slate-200:hover { color: #e2e8f0; }
+        .group:hover .group-hover\:opacity-60 { opacity: 0.6; }
+        .overflow-hidden { overflow: hidden; }
+        .overflow-y-auto { overflow-y: auto; }
+        .overflow-x-auto { overflow-x: auto; }
+        .whitespace-pre-wrap { white-space: pre-wrap; }
+        .hidden { display: none; }
+        .border-slate-700\/50 { border-color: rgba(51, 65, 85, 0.5); }
+        .bg-slate-800\/50 { background: rgba(31, 41, 55, 0.5); }
+        .shadow-emerald-950\/20 { box-shadow: 0 20px 25px rgba(4, 120, 87, 0.2); }
+        .prose { font-size: 1rem; line-height: 1.75; }
+        .prose-invert a { color: #cbd5e1; }
+        .prose-invert h3 { color: #f8fafc; }
+        .prose-invert ul { list-style: disc outside; padding-left: 1.25rem; }
+        .animate-spin-slow { animation: spin 2s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .absolute { position: absolute; }
+        .relative { position: relative; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .inline-flex { display: inline-flex; }
+        .items-start { align-items: flex-start; }
+        .bg-slate-900\/50 { background: rgba(15, 23, 42, 0.5); }
+        .text-emerald-400 { color: #34d399; }
+        .border-slate-700 { border-color: #334155; }
+        .shadow-emerald-950\/20 { box-shadow: 0 20px 25px rgba(4, 120, 87, 0.2); }
+        .group:hover .group-hover\:opacity-60 { opacity: 0.6; }
+        .border-2 { border-width: 2px; }
+        .shadow-emerald-950\/20 { box-shadow: 0 20px 25px rgba(4, 120, 87, 0.2); }
+        .text-emerald-400 { color: #34d399; }
+        .bg-slate-850 { background: #111827; }
+        .bg-slate-900 { background: #0f172a; }
+        .text-slate-300 { color: #cbd5e1; }
+    
+        .flashcard {
+            perspective: 1200px;
+        }
+        .flashcard-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <aside class="w-80 bg-slate-850 border-r border-slate-700 flex flex-col h-full shrink-0">
+            <div class="p-6 border-b border-slate-700 flex flex-col gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="bg-amber-500 text-slate-900 p-2 rounded-lg font-bold">
+                        <i data-lucide="cloud" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold leading-tight">AWS & Terraform</h1>
+                        <span class="text-xs text-slate-400">Interaktives Nachschlagewerk</span>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <div class="flex justify-between text-xs mb-1 text-slate-400">
+                        <span>Gesamtfortschritt</span>
+                        <span id="progress-text" class="font-mono font-bold text-amber-400">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-700 rounded-full h-2">
+                        <div id="progress-bar" class="bg-amber-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-4 py-2 bg-slate-800/50 flex gap-2 border-b border-slate-700">
+                <button id="btn-view-content" class="flex-1 py-2 px-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 bg-slate-700 text-amber-400 transition-colors">
+                    <i data-lucide="book-open" class="w-4 h-4"></i> Kursinhalte
+                </button>
+                <button id="btn-view-flashcards" class="flex-1 py-2 px-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 text-slate-400 hover:text-slate-200 transition-colors">
+                    <i data-lucide="layers" class="w-4 h-4"></i> Karteikarten
+                </button>
+            </div>
+
+            <div class="p-4 border-b border-slate-700">
+                <div class="relative">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+                    <input type="text" id="search-input" placeholder="Themen durchsuchen..." class="w-full pl-9 pr-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-amber-500 transition-colors">
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto p-4 space-y-4" id="sidebar-menu">
+                </nav>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-full bg-slate-900 overflow-hidden">
+            
+            <header class="h-16 border-b border-slate-700 flex items-center justify-between px-8 bg-slate-850 shrink-0 shadow-md z-10">
+                <div class="flex items-center gap-4">
+                    <h2 id="current-topic-title" class="text-xl font-bold text-slate-100 flex items-center gap-2">Portal initialisieren...</h2>
+                </div>
+                <div class="flex items-center gap-4" id="header-action-container">
+                    <label class="flex items-center gap-2 cursor-pointer bg-slate-800 px-4 py-2 rounded-lg border border-slate-700 hover:border-slate-600 text-sm transition-all select-none">
+                        <input type="checkbox" id="topic-completed-checkbox" onchange="toggleTopicProgress()" class="rounded border-slate-600 text-amber-500 focus:ring-amber-500 bg-slate-700 w-4 h-4 accent-amber-500">
+                        <span>Thema abgeschlossen</span>
+                    </label>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-8" id="main-content-scroll">
+                
+                <div id="view-content" class="max-w-4xl mx-auto space-y-6">
+                    </div>
+
+                <div id="view-flashcards" class="hidden max-w-6xl mx-auto h-full flex flex-col gap-6">
+                    <div class="text-center md:text-left">
+                        <h3 class="text-2xl font-black text-amber-400">Merksatz-Trainer</h3>
+                        <p class="text-sm text-slate-400">Verstehe die Architektur-Kernkonzepte spielend leicht. Klicke auf die Karte für die Lösung.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        
+                        <div class="lg:col-span-7 space-y-4">
+                            <div class="flashcard w-full h-96 cursor-pointer select-none" id="flashcard-element">
+                                <div class="flashcard-inner relative w-full h-full text-center shadow-2xl rounded-2xl">
+                                    
+                                    <div class="flashcard-front absolute inset-0 bg-slate-800 p-8 flex flex-col justify-between rounded-2xl border-2 border-slate-700 hover:border-amber-500/50 transition-colors">
+                                        <div class="flex justify-between items-center w-full border-b border-slate-700 pb-3">
+                                            <span class="text-xs font-bold tracking-wider text-amber-400 uppercase bg-amber-500/10 px-2.5 py-1 rounded-md" id="fc-category-front">Kategorie</span>
+                                            <span class="text-xs text-slate-400 flex items-center gap-1"><i data-lucide="help-circle" class="w-3.5 h-3.5 text-amber-400"></i> Frage-Szenario</span>
+                                        </div>
+                                        
+                                        <div class="flex-1 flex flex-col justify-center items-center py-4">
+                                            <p class="text-xl font-medium text-slate-100 leading-relaxed max-w-md text-center" id="fc-question">Lade Frage...</p>
+                                        </div>
+                                        
+                                        <div class="text-xs text-slate-400 bg-slate-850 py-2 px-4 rounded-xl border border-slate-700 inline-flex items-center gap-2 mx-auto">
+                                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin-slow"></i> Klicke auf die Karte zum Umdrehen
+                                        </div>
+                                    </div>
+
+                                    <div class="flashcard-back absolute inset-0 bg-slate-850 p-8 flex flex-col justify-between rounded-2xl border-2 border-emerald-500 shadow-emerald-950/20 shadow-lg">
+                                        <div class="flex justify-between items-center w-full border-b border-emerald-900/50 pb-3">
+                                            <span class="text-xs font-bold tracking-wider text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-1 rounded-md" id="fc-category-back">Kategorie</span>
+                                            <span class="text-xs text-emerald-400 flex items-center gap-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Architektur-Prinzip</span>
+                                        </div>
+                                        
+                                        <div class="flex-1 flex flex-col justify-center items-center py-4">
+                                            <p class="text-xl font-bold text-emerald-300 leading-relaxed max-w-lg text-center" id="fc-answer">Lade Lösung...</p>
+                                        </div>
+                                        
+                                        <div class="text-xs text-slate-400 bg-slate-900 py-2 px-4 rounded-xl border border-slate-800 inline-flex items-center gap-2 mx-auto">
+                                            <i data-lucide="undo" class="w-3.5 h-3.5"></i> Klicken, um die Frage erneut anzusehen
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center bg-slate-850 p-4 rounded-xl border border-slate-700 shadow-md">
+                                <button id="btn-prev-flashcard" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors cursor-pointer">
+                                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Zurück
+                                </button>
+                                <span class="text-sm font-mono text-slate-400 bg-slate-900 px-3 py-1 rounded-md border border-slate-700" id="fc-index">1 / 5</span>
+                                <button id="btn-next-flashcard" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded-lg text-sm flex items-center gap-2 transition-colors cursor-pointer">
+                                    Weiter <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-5 bg-slate-850 rounded-2xl border border-slate-700 p-6 space-y-4 shadow-xl">
+                            <h4 class="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                                <i data-lucide="info" class="w-4 h-4 text-amber-400"></i> Warum das wichtig ist:
+                            </h4>
+                            <p class="text-sm text-slate-300 leading-relaxed" id="fc-explanation">
+                                Wähle eine Karte aus. Hier findest du zusätzliche Erklärungen und Praxisrelevanz zum Verständnis des aktuellen Kernprinzips.
+                            </p>
+                            
+                            <div class="border-t border-slate-700 pt-4 mt-2">
+                                <span class="text-xs font-semibold text-amber-400 block mb-2 uppercase">Praxis-Beispiel / Code-Kontext:</span>
+                                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 text-xs font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap" id="fc-code-snippet">
+                                    // Praxis-Beispiel wird hier geladen...
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Core Course Data (Same Structured Curriculum)
+                const courseData = [
+            {
+                week: 1,
+                title: "Woche 1",
+                topics: [
+                    {
+                        id: "1.1",
+                        title: "Das AWS-Grundmodell verstehen",
+                        content: `<h3>Das AWS-Grundmodell verstehen</h3>
+<p>Das Cloud-Grundmodell erklärt, warum AWS dir Hardware, Netzwerk und Standort verwaltet, während du Verantwortung für Konfiguration, Daten und Anwendungen trägst.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">On-Premise vs AWS:
+[Kunde] -> [AWS Infrastruktur] -> [Managed Services]
+AWS liefert Rechenzentren, du nutzt Ressourcen über APIs.</pre>
+</div>`
+                    },
+                    {
+                        id: "1.2",
+                        title: "Regionen, Availability Zones und Edge Locations",
+                        content: `<h3>Regionen, Availability Zones und Edge Locations</h3>
+<p>AWS globaler Infrastrukturaufbau mit Regionen, Availability Zones und Edge Locations für Latenz, Ausfallsicherheit und Content Delivery.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Regionen -> AZs -> Edge Locations
+Region = Sammlung von AZs; Edge = CDN-Cache in Städten.</pre>
+</div>`
+                    },
+                    {
+                        id: "1.3",
+                        title: "IAM: Identitäten, Rollen und Berechtigungen",
+                        content: `<h3>IAM: Identitäten, Rollen und Berechtigungen</h3>
+<p>IAM steuert wer was in AWS tun darf: Benutzer, Gruppen, Rollen und Policies formen die Zugriffskontrolle.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">IAM: User
+  |
+  +---> Policies
+  +---> Roles
+Rollen geben temporäre Rechte ohne dauerhafte Anmeldedaten.</pre>
+</div>`
+                    },
+                    {
+                        id: "1.4",
+                        title: "IAM Roles, STS und Cross-Account Access",
+                        content: `<h3>IAM Roles, STS und Cross-Account Access</h3>
+<p>Rollen ermöglichen sichere, temporäre Zugriffe innerhalb und zwischen AWS-Konten durch STS und Vertrauensbeziehungen.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Account A -> AssumeRole -> Account B
+Trust Policy erlaubt Zugriff nur bei korrekter Verwendung.</pre>
+</div>`
+                    },
+                    {
+                        id: "1.5",
+                        title: "AWS Organizations, OUs und SCPs",
+                        content: `<h3>AWS Organizations, OUs und SCPs</h3>
+<p>Mit Organizations strukturierst du Konten, definierst OUs und ergänzt Governance per SCPs als globale Guardrails.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Root
+  +-- OU Prod
+  +-- OU Dev
+SCPs legen maximale Service-Nutzung fest, unabhängig von IAM-Permissions.</pre>
+</div>`
+                    },
+                ]
+            },
+            {
+                week: 2,
+                title: "Woche 2",
+                topics: [
+                    {
+                        id: "2.1",
+                        title: "EC2: Virtuelle Server in AWS",
+                        content: `<h3>EC2: Virtuelle Server in AWS</h3>
+<p>EC2 ist der grundlegende IaaS-Dienst für virtuelle Maschinen in AWS mit vielen Instanztypen und Konfigurationsmöglichkeiten.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">EC2-Instance
+- AMI
+- Instance Type
+- EBS
+- Security Group
+- IAM Role</pre>
+</div>`
+                    },
+                    {
+                        id: "2.2",
+                        title: "EC2-Netzwerk, Metadaten und Platzierung",
+                        content: `<h3>EC2-Netzwerk, Metadaten und Platzierung</h3>
+<p>EC2-Netzwerk, Instance Metadata und Placement-Entscheidungen bestimmen Erreichbarkeit, Sicherheit und Performance.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">EC2 -> ENI -> Subnet -> Route Table
+Metadata Endpoint 169.254.169.254
+Placement Group: Cluster/Spread/Partition</pre>
+</div>`
+                    },
+                    {
+                        id: "2.3",
+                        title: "EC2-Speicher: EBS und Instance Store",
+                        content: `<h3>EC2-Speicher: EBS und Instance Store</h3>
+<p>EBS ist persistent und eignet sich für Daten, die zwischen Stops erhalten bleiben sollen; Instance Store ist flüchtig und sehr schnell.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">EBS: persistentes Volume
+Instance Store: lokal, verloren beim Stoppen
+Use case: OS + Daten auf EBS, Cache auf Instance Store.</pre>
+</div>`
+                    },
+                    {
+                        id: "2.4",
+                        title: "EC2-Kosten und Tenancy",
+                        content: `<h3>EC2-Kosten und Tenancy</h3>
+<p>EC2-Kosten hängen von dem gewählten Instance-Typ, der Region, der Nutzung und der Tenancy-Option ab.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Shared Tenancy
+Dedicated Host
+Dedicated Instance
+Kosten = vCPU + RAM + EBS + Netzwerk + Lizenz</pre>
+</div>`
+                    },
+                    {
+                        id: "2.5",
+                        title: "VPC, CIDR und Subnetze",
+                        content: `<h3>VPC, CIDR und Subnetze</h3>
+<p>VPC ist dein privates Netzwerk in AWS. CIDR-Block und Subnetze definieren, wie IPs verteilt werden und wie Routing funktioniert.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">VPC 10.0.0.0/16
+Subnet A: 10.0.1.0/24
+Subnet B: 10.0.2.0/24
+Route Table steuert den Verkehr.</pre>
+</div>`
+                    },
+                ]
+            },
+            {
+                week: 3,
+                title: "Woche 3",
+                topics: [
+                    {
+                        id: "3.1",
+                        title: "Internet, NAT und sichere Admin-Wege",
+                        content: `<h3>Internet, NAT und sichere Admin-Wege</h3>
+<p>IGW, NAT-Gateway und Bastion Hosts steuern sicheren Internetzugang und erlauben administrative Verbindungen in private Subnetze.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Internet -> IGW -> Public Subnet
+Private Subnet -> NAT -> Internet
+Admin -> Bastion -> Private EC2</pre>
+</div>`
+                    },
+                    {
+                        id: "3.2",
+                        title: "Security Groups, NACLs und Network Firewall",
+                        content: `<h3>Security Groups, NACLs und Network Firewall</h3>
+<p>SGs sind stateful Firewall-Regeln auf Instance-Ebene, NACLs sind stateless auf Subnetz-Ebene, Network Firewall bietet zentrale Regeln.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Inbound/Outbound
+SG: stateful -> Antwort erlaubt
+NACL: stateless -> beide Richtungen definieren
+Firewall = zentraler Sicherheitsdienst</pre>
+</div>`
+                    },
+                    {
+                        id: "3.3",
+                        title: "Private AWS-Zugriffe, Peering und Hybrid Networking",
+                        content: `<h3>Private AWS-Zugriffe, Peering und Hybrid Networking</h3>
+<p>Private Zugriffe wie VPC Endpoint, Peering und VPN/Transit Gateway ermöglichen interne Kommunikation ohne öffentliches Internet.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Service Endpoint
+VPC Peering
+VPN
+Transit Gateway
+Private Link</pre>
+</div>`
+                    },
+                    {
+                        id: "3.4",
+                        title: "VPC Flow Logs und CloudTrail",
+                        content: `<h3>VPC Flow Logs und CloudTrail</h3>
+<p>Flow Logs erfassen Netzwerkverkehr, CloudTrail protokolliert API-Aktionen. Zusammen bilden sie die Grundlage für Sicherheitsanalyse und Audit.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Flow Logs -> ENI/Subnetz/VPC
+CloudTrail -> API Calls
+Analyse für Fehlersuche und Compliance.</pre>
+</div>`
+                    },
+                    {
+                        id: "3.5",
+                        title: "Amazon S3: Objektspeicher",
+                        content: `<h3>Amazon S3: Objektspeicher</h3>
+<p>S3 speichert Objekte in Buckets, bietet Versionierung, Lifecycle, Verschlüsselung und kann als statische Website dienen.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Bucket
+  +-- Objekt 1
+  +-- Objekt 2
+Versioning = on/off
+Lifecycle = Glacier, automatische Bereinigung.</pre>
+</div>`
+                    },
+                ]
+            },
+            {
+                week: 4,
+                title: "Woche 4",
+                topics: [
+                    {
+                        id: "4.1",
+                        title: "Route 53 und DNS",
+                        content: `<h3>Route 53 und DNS</h3>
+<p>Route 53 liefert DNS-Namen, ermöglicht Routing-Policies und verbindet Domains mit AWS-Ressourcen weltweit.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">shop.example.de -> Route53 -> ALB -> EC2
+Policy: Simple, Weighted, Latency, Failover.</pre>
+</div>`
+                    },
+                    {
+                        id: "4.2",
+                        title: "Terraform und Infrastructure as Code",
+                        content: `<h3>Terraform und Infrastructure as Code</h3>
+<p>Terraform beschreibt Infrastruktur als Code und macht Bereitstellung wiederholbar, versionierbar und überprüfbar.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Terraform files
+  - main.tf
+  - variables.tf
+  - outputs.tf
+State speichert Ressourcen-Mapping.</pre>
+</div>`
+                    },
+                    {
+                        id: "4.3",
+                        title: "Terraform-Workflow",
+                        content: `<h3>Terraform-Workflow</h3>
+<p>Der Workflow init/plan/apply/destroy führt Infrastrukturänderungen sicher aus und zeigt vorher, was verändert wird.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">terraform init
+terraform validate
+terraform plan
+terraform apply
+terraform destroy</pre>
+</div>`
+                    },
+                    {
+                        id: "4.4",
+                        title: "Terraform State, Remote Backend und Drift",
+                        content: `<h3>Terraform State, Remote Backend und Drift</h3>
+<p>State speichert den Ist-Zustand. Remote Backends sichern es zentral, Drift zeigt Abweichungen zwischen Code und Realität.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">local state -> risky
+remote backend -> S3/DynamoDB
+drift = Änderung ohne apply</pre>
+</div>`
+                    },
+                    {
+                        id: "4.5",
+                        title: "Variablen, Outputs, Locals und sensible Werte",
+                        content: `<h3>Variablen, Outputs, Locals und sensible Werte</h3>
+<p>Variablen parametrieren Konfiguration, Outputs geben Werte zurück, Locals berechnen Wiederholungen, sensible Werte bleiben geschützt.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">variable \"region\" {}
+output \"bucket_name\" {}
+local \"app_ports\" = [80,443]
+Sensitive values in tfvars.</pre>
+</div>`
+                    },
+                ]
+            },
+            {
+                week: 5,
+                title: "Woche 5",
+                topics: [
+                    {
+                        id: "5.1",
+                        title: "HCL-Ausdrücke, Funktionen und Iteration",
+                        content: `<h3>HCL-Ausdrücke, Funktionen und Iteration</h3>
+<p>HCL bietet Ausdrücke, eingebaute Funktionen und Schleifen für wiederholbare und dynamische Infrastrukturdefinitionen.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">for_each = [1,2,3]
+lookup(var.map, \"key\", \"default\")
+join(',', var.names)</pre>
+</div>`
+                    },
+                    {
+                        id: "5.2",
+                        title: "Abhängigkeiten und Lifecycle",
+                        content: `<h3>Abhängigkeiten und Lifecycle</h3>
+<p>Terraform verwaltet Abhängigkeiten automatisch; Lifecycle-Regeln steuern Erstellen, Ändern und Löschen von Ressourcen.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">resource depends_on = [aws_vpc.main]
+lifecycle { prevent_destroy = true }</pre>
+</div>`
+                    },
+                    {
+                        id: "5.3",
+                        title: "Terraform-Module",
+                        content: `<h3>Terraform-Module</h3>
+<p>Module kapseln Infrastruktur in wiederverwendbare Bausteine und reduzieren Doppelung in Terraform-Konfigurationen.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">module \"network\" {
+  source = \"./modules/network\"
+}
+module \"app\" { ... }</pre>
+</div>`
+                    },
+                    {
+                        id: "5.4",
+                        title: "Import, Refactoring und Debugging",
+                        content: `<h3>Import, Refactoring und Debugging</h3>
+<p>Import erlaubt bestehende Ressourcen in Terraform zu integrieren, Refactoring verbessert Struktur, Debugging zeigt Ursache von Fehlern.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">terraform import aws_instance.app i-1234567890abcdef0
+TF_LOG=DEBUG terraform plan</pre>
+</div>`
+                    },
+                    {
+                        id: "5.5",
+                        title: "Workspaces und HCP Terraform",
+                        content: `<h3>Workspaces und HCP Terraform</h3>
+<p>Workspaces isolieren Umgebungen in einem Terraform-Kontext, HCP Terraform bietet Cloud-gehostete State-Verwaltung und Collaboration.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">terraform workspace new dev
+terraform workspace select prod
+HCP = Terraform Cloud / Enterprise</pre>
+</div>`
+                    },
+                ]
+            },
+            {
+                week: 6,
+                title: "Woche 6",
+                topics: [
+                    {
+                        id: "6.1",
+                        title: "Gesamtarchitektur: Wie die Bausteine zusammenspielen",
+                        content: `<h3>Gesamtarchitektur: Wie die Bausteine zusammenspielen</h3>
+<p>Architektur entsteht aus dem Zusammenspiel von Netzwerk, Compute, Storage, IAM und Monitoring.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Route53 -> CloudFront -> ALB -> EC2 -> RDS / S3
+IAM + VPC + Security = sichere Anwendung.</pre>
+</div>`
+                    },
+                    {
+                        id: "6.2",
+                        title: "DevOps-Fokus: Welche Fähigkeiten zusätzlich wichtig sind",
+                        content: `<h3>DevOps-Fokus: Welche Fähigkeiten zusätzlich wichtig sind</h3>
+<p>DevOps verbindet Infrastruktur, Automatisierung, Monitoring und Teamprozesse für kontinuierliche Bereitstellung.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Code Pipeline -> CI/CD
+Monitoring -> CloudWatch
+Runbooks -> Playbooks.</pre>
+</div>`
+                    },
+                    {
+                        id: "6.3",
+                        title: "Prüfungs- und Praxismerksätze",
+                        content: `<h3>Prüfungs- und Praxismerksätze</h3>
+<p>Kernmerksätze helfen, AWS-Prüfungsfragen rasch einzuordnen: Verantwortungstrennung, Netzwerkkonzepte, Sicherheit, Terraform-State.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Merksatz: Shared Responsibility = AWS owns cloud, you own in cloud.
+Merksatz: SG stateful, NACL stateless.</pre>
+</div>`
+                    },
+                    {
+                        id: "6.4",
+                        title: "Kompakte Befehlsübersicht",
+                        content: `<h3>Kompakte Befehlsübersicht</h3>
+<p>Wichtige AWS CLI- und Terraform-Befehle auf einen Blick helfen beim schnellen Nachschlagen und bei Übungen.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">aws s3 ls
+aws ec2 describe-instances
+terraform plan
+terraform apply</pre>
+</div>`
+                    },
+                    {
+                        id: "6.5",
+                        title: "Glossar",
+                        content: `<h3>Glossar</h3>
+<p>Kurzer Überblick über zentrale Begriffe wie VPC, IAM, EBS, Terraform, Module und Drift zur schnellen Wiederholung.</p>
+<div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">VPC = Virtual Private Cloud
+IAM = Identity and Access Management
+HCL = HashiCorp Configuration Language</pre>
+</div>`
+                    },
+                ]
+            },
+        ];
+
+        // ENHANCED FLASHCARDS DATA (Rich context & examples to be understandable)
+        const flashcards = [
+            {
+                category: "AWS-Modell",
+                question: "Was beschreibt das AWS-Grundmodell?",
+                answer: "AWS stellt Infrastruktur als Dienst bereit, während du Anwendungen, Konfiguration und Daten kontrollierst.",
+                explanation: "AWS verwaltet Rechenzentren, Energie und Netzwerk; du verwaltest Instanzen, Daten und Zugriffsrechte.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Regionen & AZs",
+                question: "Warum nutzt AWS Regionen und Availability Zones?",
+                answer: "Damit Anwendungen standortbasiert verfügbar, ausfallsicher und latenzoptimiert sind.",
+                explanation: "Region = geografischer Bereich; AZ = isolierte Rechenzonen; Edge = CDN-Cache in Städten.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "IAM-Basics",
+                question: "Was ist der Unterschied zwischen IAM User und IAM Role?",
+                answer: "Ein User ist ein dauerhafter AWS-Identität, eine Role ist temporär und kann von Personen oder Diensten übernommen werden.",
+                explanation: "User = feste Anmeldedaten; Role = temporäre Sicherheitsinformationen via STS.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Cross-Account",
+                question: "Wie ermöglicht STS einen Cross-Account-Zugriff?",
+                answer: "Ein Principal erhält eine temporäre Rolle in einem anderen Konto, die durch eine Trust Policy erlaubt wird.",
+                explanation: "sts:AssumeRole erlaubt Zugriff von Konto A nach Konto B, wenn die Zielrolle vertraut.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Organizations",
+                question: "Was macht eine SCP in AWS Organizations?",
+                answer: "Sie begrenzt maximal mögliche Dienste und Aktionen auf Organisationsebene, unabhängig von IAM-Berechtigungen.",
+                explanation: "SCPs sind Guardrails: No new permissions, only restrictions.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "EC2",
+                question: "Wofür nutzt du Amazon EC2?",
+                answer: "Für virtuelle Server, also die flexible Bereitstellung von Maschinen in der Cloud.",
+                explanation: "EC2 ist das IaaS-Grundgerüst für VMs, Betriebssystem, Anwendungen und Netzwerk.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "EC2-Netzwerk",
+                question: "Was ist der Zweck einer EC2-ENI?",
+                answer: "Die Elastic Network Interface verbindet eine EC2-Instanz mit dem VPC-Netzwerk.",
+                explanation: "ENI liefert IP-Adresse, Security Group und Netzwerkzuordnung für die Instanz.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "EBS vs Instance Store",
+                question: "Was passiert mit einem Instance Store bei einem Stopp?",
+                answer: "Er geht verloren, weil er nur temporären lokalen Speicher bietet.",
+                explanation: "Dauerhafte Daten gehören auf EBS, kurzfristige Caches auf Instance Store.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Tenancy",
+                question: "Was ist der Unterschied zwischen Shared und Dedicated Tenancy?",
+                answer: "Shared nutzt gemeinsam genutzte Hosthardware, Dedicated reserviert Hardware nur für dich.",
+                explanation: "Dedicated kann Compliance-Vorgaben erfüllen, kostet aber mehr.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "VPC",
+                question: "Wozu dient eine VPC?",
+                answer: "Sie isoliert dein Netzwerk in AWS und gibt dir Kontrolle über IP-Adressbereiche und Routing.",
+                explanation: "Eine VPC ist ein privates Cloud-Netzwerk mit Subnetzen und Routen.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Internet & NAT",
+                question: "Warum braucht ein privates Subnetz ein NAT-Gateway?",
+                answer: "Damit Instanzen ausgehend ins Internet können, ohne selbst öffentlich erreichbar zu sein.",
+                explanation: "NAT ermöglicht ausgehenden Traffic, inbound bleibt blockiert.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Security Groups",
+                question: "Was ist der größte Unterschied zwischen SG und NACL?",
+                answer: "SGs sind stateful, NACLs sind stateless.",
+                explanation: "Bei NACLs musst du beide Richtungen ausdrücklicher Regeln definieren.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Peering",
+                question: "Wann nutzt du VPC Peering statt VPN?",
+                answer: "Wenn zwei VPCs direkt miteinander kommunizieren sollen, ohne Internet.",
+                explanation: "Peering ist schneller und kostengünstiger für Region-zu-Region-Verkehr.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Flow Logs",
+                question: "Was protokolliert CloudTrail?",
+                answer: "API-Aufrufe und Aktionen in AWS, nicht Netzwerkpakete.",
+                explanation: "Flow Logs prüfen Netzwerkverkehr, CloudTrail prüft Management-Ebene.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "S3",
+                question: "Was ist ein S3 Bucket?",
+                answer: "Ein Container für Objekte mit konfigurierbaren Zugriffsfunktionen.",
+                explanation: "Buckets speichern Dateien, Lebenszyklen und Versionierung.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Route 53",
+                question: "Was macht Route 53?",
+                answer: "Es löst DNS-Namen auf und bietet Routing-Entscheidungen und Health Checks.",
+                explanation: "Es verbindet Domains mit AWS-Zielen wie Load Balancer oder S3.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "IaC",
+                question: "Warum nutzt man Terraform?",
+                answer: "Um Infrastruktur als Code zu verwalten und Deployments wiederholbar zu machen.",
+                explanation: "Terraform strukturiert Ressourcen, Versionierung und Review.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Workflow",
+                question: "Was zeigt terraform plan an?",
+                answer: "Welche Änderungen Terraform am echten Zustand durchführen wird.",
+                explanation: "Plan validiert Änderungen bevor sie angewendet werden.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "State",
+                question: "Warum ist Terraform State wichtig?",
+                answer: "Weil es den realen Zustand der Ressourcen und deren IDs speichert.",
+                explanation: "Ohne State weiß Terraform nicht, welche Ressourcen es verwalten soll.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Variablen",
+                question: "Wozu dienen Outputs in Terraform?",
+                answer: "Sie geben Werte aus dem Modul zurück und machen sie für andere Ressourcen nutzbar.",
+                explanation: "Outputs teilen wichtige IDs und Endpunkte mit anderen Modulen.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "HCL",
+                question: "Was ermöglicht for_each in Terraform?",
+                answer: "Mehrere Ressourcen aus einer Liste dynamisch zu erzeugen.",
+                explanation: "Iteration reduziert Duplikate in Infrastrukturdefinitionen.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Lifecycle",
+                question: "Wozu dient prevent_destroy?",
+                answer: "Es schützt eine Ressource davor, versehentlich gelöscht zu werden.",
+                explanation: "Lifecycle-Regeln beeinflussen Terraform-Verhalten beim Ändern und Löschen.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Module",
+                question: "Warum solltest du Module verwenden?",
+                answer: "Damit du Infrastrukturbausteine wiederverwenden und strukturieren kannst.",
+                explanation: "Module machen Terraform-Code sauberer und testbarer.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Import",
+                question: "Wann braucht man terraform import?",
+                answer: "Wenn vorhandene Ressourcen in Terraform verwaltet werden sollen.",
+                explanation: "Import erzeugt State-Einträge für bereits bestehende Ressourcen.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Workspaces",
+                question: "Was isoliert ein Terraform Workspace?",
+                answer: "Eine eigene Zustandsdatei für eine Umgebung wie dev oder prod.",
+                explanation: "Workspaces trennen State für mehrere Deployments im selben Code.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Architektur",
+                question: "Was ist bei Gesamtarchitektur wichtig?",
+                answer: "Dass Dienste zusammenarbeiten und nicht isoliert betrachtet werden.",
+                explanation: "Netzwerk, IAM, Compute und Storage müssen als System gestaltet werden.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "DevOps",
+                question: "Was gehört in den DevOps-Fokus?",
+                answer: "Automatisierung, Monitoring, Testing und Zusammenarbeit im Team.",
+                explanation: "CI/CD, Observability und Feedback-Loops sind entscheidend.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Merksätze",
+                question: "Was ist der zentrale Shared Responsibility-Merksatz?",
+                answer: "AWS owns the cloud, you own in the cloud.",
+                explanation: "Das hilft, Prüfungssituationen zu trennen.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "CLI",
+                question: "Welcher Befehl zeigt AWS S3 Buckets?",
+                answer: "aws s3 ls",
+                explanation: "Ein schneller Befehl für Listen und Überprüfung.",
+                codeSnippet: "# Beispiel"
+            },
+            {
+                category: "Glossar",
+                question: "Was bedeutet VPC?",
+                answer: "Virtual Private Cloud.",
+                explanation: "Die Netzwerkisolierung in AWS.",
+                codeSnippet: "# Beispiel"
+            },
+        ];
+
+        let currentView = 'content';
+        let currentTopicId = "1.1";
+        let currentFlashcardIndex = 0;
+        let completedTopics = JSON.parse(localStorage.getItem('portal_progress')) || {};
+
+        function initPortal() {
+            renderSidebar();
+            loadTopic(currentTopicId);
+            updateProgressMetrics();
+            updateFlashcard();
+            
+            // Attach event listeners after functions are defined
+            document.getElementById('btn-view-content').addEventListener('click', () => switchView('content'));
+            document.getElementById('btn-view-flashcards').addEventListener('click', () => switchView('flashcards'));
+            document.getElementById('search-input').addEventListener('input', handleSearch);
+            document.getElementById('flashcard-element').addEventListener('click', toggleCardFlip);
+            document.getElementById('btn-prev-flashcard').addEventListener('click', prevFlashcard);
+            document.getElementById('btn-next-flashcard').addEventListener('click', nextFlashcard);
+        }
+
+        function renderSidebar() {
+            const menuContainer = document.getElementById('sidebar-menu');
+            menuContainer.innerHTML = '';
+
+            courseData.forEach(weekData => {
+                const weekSection = document.createElement('div');
+                weekSection.className = 'space-y-1';
+                weekSection.innerHTML = `
+                    <h4 class="text-xs font-semibold tracking-wider text-slate-500 uppercase px-2 mb-2">${weekData.title}</h4>
+                    <div class="space-y-0.5" id="week-list-${weekData.week}"></div>
+                `;
+                menuContainer.appendChild(weekSection);
+                const listContainer = document.getElementById(`week-list-${weekData.week}`);
+
+                weekData.topics.forEach(topic => {
+                    const isDone = completedTopics[topic.id];
+                    const item = document.createElement('button');
+                    item.id = `nav-item-${topic.id}`;
+                    item.onclick = () => loadTopic(topic.id);
+                    item.className = `w-full text-left px-3 py-2 rounded-lg text-sm transition-all flex items-center justify-between group ${topic.id === currentTopicId ? 'bg-amber-500 text-slate-900 font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`;
+                    
+                    item.innerHTML = `
+                        <span class="truncate pr-2">${topic.id} ${topic.title}</span>
+                        <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0 transition-opacity ${isDone ? 'text-emerald-500' : 'text-slate-600 opacity-20 group-hover:opacity-60'}"></i>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            });
+        }
+
+        function loadTopic(id) {
+            currentTopicId = id;
+            switchView('content');
+            
+            let foundTopic = null;
+            courseData.forEach(w => w.topics.forEach(t => { if(t.id === id) foundTopic = t; }));
+            
+            if (foundTopic) {
+                document.getElementById('current-topic-title').innerHTML = `<i data-lucide="book-open" class="w-5 h-5 text-amber-400"></i> ${foundTopic.id} ${foundTopic.title}`;
+                const displayArea = document.getElementById('view-content');
+                displayArea.innerHTML = `
+                    <div class="bg-slate-850 p-8 rounded-2xl border border-slate-700 shadow-xl prose prose-invert max-w-none">
+                        ${foundTopic.content}
+                    </div>
+                `;
+                document.getElementById('topic-completed-checkbox').checked = !!completedTopics[id];
+                
+                document.querySelectorAll('[id^="nav-item-"]').forEach(el => {
+                    el.className = el.className.replace('bg-amber-500 text-slate-900 font-bold', 'text-slate-400 hover:bg-slate-800 hover:text-slate-200');
+                });
+                const activeEl = document.getElementById(`nav-item-${id}`);
+                if (activeEl) {
+                    activeEl.className = `w-full text-left px-3 py-2 rounded-lg text-sm transition-all flex items-center justify-between group bg-amber-500 text-slate-900 font-bold`;
+                }
+                document.getElementById('main-content-scroll').scrollTop = 0;
+            }
+        }
+
+        function toggleTopicProgress() {
+            const checked = document.getElementById('topic-completed-checkbox').checked;
+            if (checked) completedTopics[currentTopicId] = true;
+            else delete completedTopics[currentTopicId];
+            
+            localStorage.setItem('portal_progress', JSON.stringify(completedTopics));
+            renderSidebar();
+            updateProgressMetrics();
+            loadTopic(currentTopicId);
+        }
+
+        function updateProgressMetrics() {
+            let total = 0;
+            courseData.forEach(w => total += w.topics.length);
+            const completedCount = Object.keys(completedTopics).length;
+            const percentage = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+            
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+            document.getElementById('progress-text').innerText = `${percentage}%`;
+        }
+
+        
+function switchView(view) {
+    const previousView = currentView;
+    currentView = view;
+    if (view === 'content') {
+        document.getElementById('view-content').classList.remove('hidden');
+        document.getElementById('view-flashcards').classList.add('hidden');
+        document.getElementById('header-action-container').classList.remove('invisible');
+        document.getElementById('btn-view-content').className = "flex-1 py-2 px-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 bg-slate-700 text-amber-400";
+        document.getElementById('btn-view-flashcards').className = "flex-1 py-2 px-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 text-slate-400 hover:text-slate-200";
+        if (previousView !== 'content') {
+            loadTopic(currentTopicId);
+        }
+    } else {
+        document.getElementById('view-content').classList.add('hidden');
+        document.getElementById('view-flashcards').classList.remove('hidden');
+        document.getElementById('header-action-container').classList.add('invisible');
+        document.getElementById('btn-view-content').className = "flex-1 py-2 px-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 text-slate-400 hover:text-slate-200";
+        document.getElementById('btn-view-flashcards').className = "flex-1 py-2 px-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 bg-slate-700 text-amber-400";
+        document.getElementById('current-topic-title').innerHTML = `Aktivierter Karteikarten-Modus`;
+    }
+}
+
+
+        // IMPROVED FLASHCARD INTERACTION
+        function toggleCardFlip() {
+            const cardElement = document.querySelector('.flashcard');
+            cardElement.classList.toggle('flipped');
+        }
+
+        function updateFlashcard() {
+            const cardElement = document.querySelector('.flashcard');
+            cardElement.classList.remove('flipped'); 
+            
+            setTimeout(() => {
+                const currentCard = flashcards[currentFlashcardIndex];
+                
+                // Set text items
+                document.getElementById('fc-category-front').innerText = currentCard.category;
+                document.getElementById('fc-category-back').innerText = currentCard.category;
+                document.getElementById('fc-question').innerText = currentCard.question;
+                document.getElementById('fc-answer').innerText = currentCard.answer;
+                document.getElementById('fc-explanation').innerText = currentCard.explanation;
+                document.getElementById('fc-code-snippet').innerText = currentCard.codeSnippet;
+                
+                document.getElementById('fc-index').innerText = `${currentFlashcardIndex + 1} / ${flashcards.length}`;
+            }, 150);
+        }
+
+        function nextFlashcard(e) {
+            e.stopPropagation();
+            currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcards.length;
+            updateFlashcard();
+        }
+
+        function prevFlashcard(e) {
+            e.stopPropagation();
+            currentFlashcardIndex = (currentFlashcardIndex - 1 + flashcards.length) % flashcards.length;
+            updateFlashcard();
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            courseData.forEach(week => {
+                week.topics.forEach(topic => {
+                    const match = topic.title.toLowerCase().includes(query) || topic.content.toLowerCase().includes(query);
+                    const el = document.getElementById(`nav-item-${topic.id}`);
+                    if (el) match ? el.classList.remove('hidden') : el.classList.add('hidden');
+                });
+            });
+        }
+
+        window.onload = initPortal;
+    </script>
+</body>
+</html>
