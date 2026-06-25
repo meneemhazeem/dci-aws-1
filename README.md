@@ -111,6 +111,4 @@ Found an error? Have suggestions? Feel free to:
 
 Based on DCI Cloud Engineering course materials.
 
----
-
 **Made with ❤️ for learning AWS and Terraform**
