@@ -523,6 +523,7 @@
             "flashcards.hintergrund": { de: "Hintergrund & Bedeutung:", en: "Background & Meaning:" },
             "flashcards.default_explanation": { de: "Wählen Sie eine Karte aus. Hier finden Sie vertiefende Erklärungen und praktische Relevanz zum Verständnis des Themas.", en: "Select a card. Here you will find in-depth explanations and practical relevance for understanding the topic." },
             "flashcards.beispiel": { de: "Praktisches Beispiel:", en: "Practical Example:" },
+            "flashcards.mode_active": { de: "Aktivierter Karteikarten-Modus", en: "Flashcard Mode Active" },
             "lang.de": { de: "DE", en: "DE" },
             "lang.en": { de: "EN", en: "EN" },
         };
@@ -7099,7 +7100,7 @@
             if (!currentTopicId) return flashcards;
             const category = topicToFlashcardMap[currentTopicId];
             if (!category) return flashcards;
-            return flashcards.filter(card => card.category === category);
+            return flashcards.filter(card => (card.category.de || card.category) === category);
         }
 
         function updateFilteredFlashcards() {
@@ -7157,7 +7158,7 @@
                 const weekSection = document.createElement('div');
                 weekSection.className = 'space-y-1';
                 weekSection.innerHTML = `
-                    <h4 class="text-xs font-semibold tracking-wider text-slate-500 uppercase px-3 mb-2 flex items-center gap-2"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${weekData.title}</h4>
+                    <h4 class="text-xs font-semibold tracking-wider text-slate-500 uppercase px-3 mb-2 flex items-center gap-2"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${weekData.title[currentLang] || weekData.title.de}</h4>
                     <div class="space-y-1" id="week-list-${weekData.week}"></div>
                 `;
                 menuContainer.appendChild(weekSection);
@@ -7171,7 +7172,7 @@
                     item.className = `w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all flex items-center justify-between group topic-card ${topic.id === currentTopicId ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold shadow-lg shadow-blue-500/20' : 'text-slate-400 hover:text-slate-200'}`;
 
                     item.innerHTML = `
-                        <span class="truncate pr-2 text-xs">${topic.title}</span>
+                        <span class="truncate pr-2 text-xs">${topic.title[currentLang] || topic.title.de}</span>
                         <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0 transition-all ${isDone ? 'text-emerald-500' : 'text-slate-600 opacity-30 group-hover:opacity-60'}"></i>
                     `;
                     listContainer.appendChild(item);
@@ -7187,11 +7188,14 @@
             courseData.forEach(w => w.topics.forEach(t => { if(t.id === id) foundTopic = t; }));
 
             if (foundTopic) {
-                document.getElementById('current-topic-title').innerHTML = `${foundTopic.title}`;
+                document.getElementById('current-topic-title').innerHTML = `
+                    <span class="inline-block w-1 h-8 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></span>
+                    ${foundTopic.title[currentLang] || foundTopic.title.de}
+                `;
                 const displayArea = document.getElementById('view-content');
                 displayArea.innerHTML = `
                     <div class="bg-slate-850 p-8 rounded-2xl border border-slate-700 shadow-xl prose prose-invert max-w-none">
-                        ${foundTopic.content}
+                        ${foundTopic.content[currentLang] || foundTopic.content.de}
                     </div>
                 `;
                 document.getElementById('topic-completed-checkbox').checked = !!completedTopics[id];
@@ -7249,7 +7253,7 @@ function switchView(view) {
         document.getElementById('header-action-container').classList.add('invisible');
         document.getElementById('btn-view-content').className = "flex-1 py-2 px-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 text-slate-400 hover:text-slate-200";
         document.getElementById('btn-view-flashcards').className = "flex-1 py-2 px-3 rounded-md text-sm font-medium flex items-center justify-center gap-2 bg-slate-700 text-amber-400";
-        document.getElementById('current-topic-title').innerHTML = `Aktivierter Karteikarten-Modus`;
+        document.getElementById('current-topic-title').innerHTML = translations["flashcards.mode_active"][currentLang] || translations["flashcards.mode_active"].de;
     }
 }
 
@@ -7269,11 +7273,12 @@ function switchView(view) {
                 const currentCard = cards[currentFlashcardIndex];
 
                 // Set text items
-                document.getElementById('fc-category-front').innerText = currentCard.category;
-                document.getElementById('fc-category-back').innerText = currentCard.category;
-                document.getElementById('fc-question').innerText = currentCard.question;
-                document.getElementById('fc-answer').innerText = currentCard.answer;
-                document.getElementById('fc-explanation').innerText = currentCard.explanation;
+                const cat = currentCard.category[currentLang] || currentCard.category.de;
+                document.getElementById('fc-category-front').innerText = cat;
+                document.getElementById('fc-category-back').innerText = cat;
+                document.getElementById('fc-question').innerText = currentCard.question[currentLang] || currentCard.question.de;
+                document.getElementById('fc-answer').innerText = currentCard.answer[currentLang] || currentCard.answer.de;
+                document.getElementById('fc-explanation').innerText = currentCard.explanation[currentLang] || currentCard.explanation.de;
                 document.getElementById('fc-code-snippet').innerText = currentCard.codeSnippet;
 
                 const total = filteredFlashcards.length > 0 ? filteredFlashcards.length : flashcards.length;
@@ -7299,7 +7304,9 @@ function switchView(view) {
             const query = document.getElementById('search-input').value.toLowerCase();
             courseData.forEach(week => {
                 week.topics.forEach(topic => {
-                    const match = topic.title.toLowerCase().includes(query) || topic.content.toLowerCase().includes(query);
+                    const titleText = (topic.title[currentLang] || topic.title.de || topic.title).toLowerCase();
+                    const contentText = (topic.content[currentLang] || topic.content.de || topic.content).toLowerCase();
+                    const match = titleText.includes(query) || contentText.includes(query);
                     const el = document.getElementById(`nav-item-${topic.id}`);
                     if (el) match ? el.classList.remove('hidden') : el.classList.add('hidden');
                 });
