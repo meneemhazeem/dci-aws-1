@@ -543,6 +543,130 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
+
+        /* Policy / structured data cards */
+        .policy-card {
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+        .policy-row {
+            display: flex;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .policy-label {
+            color: #94a3b8;
+            font-weight: 600;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        .policy-value {
+            color: #e2e8f0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .policy-result {
+            color: #34d399;
+        }
+
+        /* S3 object card */
+        .s3-object {
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .s3-part {
+            padding: 10px 14px;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            border-right: 1px solid #475569;
+        }
+        .s3-part:last-child { border-right: none; }
+        .s3-part-label {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        .s3-part-value {
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        /* Step flow diagrams */
+        .step-flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 6px 12px;
+            padding: 16px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #475569;
+            border-radius: 10px;
+        }
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #3b82f6;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .step-block {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .step-text {
+            font-size: 0.8rem;
+            color: #e2e8f0;
+        }
+        .step-arrow {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        /* Alert/comparison cards */
+        .alert-card {
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.82rem;
+            line-height: 1.4;
+        }
+        .alert-card.warning {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #fde68a;
+        }
+        .alert-card.danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        .alert-card.neutral {
+            background: rgba(148, 163, 184, 0.1);
+            border: 1px solid #475569;
+            color: #e2e8f0;
+        }
+        .alert-icon {
+            margin-right: 6px;
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased">
@@ -1174,11 +1298,23 @@
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Least Privilege – Beispiel</h4>
   <p class="text-xs text-slate-300 mt-2">Die Anwendung bekommt nicht "AWS-Zugriff", sondern eine kleine, exakt definierte Fähigkeit.</p>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    Principal: ShopAppRole<br>
-    Action: s3:GetObject<br>
-    Resource: arn:aws:s3:::shop-products/*<br>
-    Resultat: Bilder lesen erlaubt, alles andere standardmäßig verboten
+  <div class="policy-card mt-2">
+    <div class="policy-row">
+      <span class="policy-label">Principal:</span>
+      <span class="policy-value">ShopAppRole</span>
+    </div>
+    <div class="policy-row">
+      <span class="policy-label">Action:</span>
+      <span class="policy-value">s3:GetObject</span>
+    </div>
+    <div class="policy-row">
+      <span class="policy-label">Resource:</span>
+      <span class="policy-value">arn:aws:s3:::shop-products/*</span>
+    </div>
+    <div class="policy-row">
+      <span class="policy-label">Resultat:</span>
+      <span class="policy-value policy-result">Bilder lesen erlaubt, alles andere standardmäßig verboten</span>
+    </div>
   </div>
 </div>`,
                           en: `<h3>IAM: Identity and Access Management</h3>
@@ -1221,16 +1357,15 @@
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">IAM Policy - Structure</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    {<br>
-    &nbsp;&nbsp;"Version": "2012-10-17",<br>
-    &nbsp;&nbsp;"Statement": [{<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;"Effect": "Allow",<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;"Action": "s3:GetObject",<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;"Resource": "arn:aws:s3:::my-bucket/*"<br>
-    &nbsp;&nbsp;}]<br>
-    }
-  </div>
+  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2" style="white-space: pre;">
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": "s3:GetObject",
+    "Resource": "arn:aws:s3:::my-bucket/*"
+  }]
+}
   <p class="text-xs text-slate-300 mt-2"><span class="text-amber-400">Important:</span> Policies follow an explicit deny (Deny takes precedence over any Allow). If there is no Allow, access is denied by default.</p>
 </div>
 
@@ -1270,9 +1405,15 @@
       </tbody>
     </table>
   </div>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    Trust stimmt, Permission fehlt: Rolle kann übernommen werden, API-Aufrufe scheitern<br>
-    Permission wäre ausreichend, Trust stimmt nicht: Rolle kann gar nicht übernommen werden
+  <div class="flex flex-col gap-2 mt-2">
+    <div class="alert-card warning">
+      <span class="alert-icon">⚠️</span>
+      <strong>Trust stimmt, Permission fehlt:</strong> Rolle kann übernommen werden, API-Aufrufe scheitern
+    </div>
+    <div class="alert-card danger">
+      <span class="alert-icon">🚫</span>
+      <strong>Permission wäre ausreichend, Trust stimmt nicht:</strong> Rolle kann gar nicht übernommen werden
+    </div>
   </div>
 </div>
 
@@ -1352,9 +1493,15 @@
       </tbody>
     </table>
   </div>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    Trust matches, Permission missing: role can be assumed, API calls fail<br>
-    Permission would be sufficient, Trust doesn't match: role cannot be assumed at all
+  <div class="flex flex-col gap-2 mt-2">
+    <div class="alert-card warning">
+      <span class="alert-icon">⚠️</span>
+      <strong>Trust matches, Permission missing:</strong> role can be assumed, API calls fail
+    </div>
+    <div class="alert-card danger">
+      <span class="alert-icon">🚫</span>
+      <strong>Permission would be sufficient, Trust doesn't match:</strong> role cannot be assumed at all
+    </div>
   </div>
 </div>
 
@@ -3550,10 +3697,19 @@
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Praxis: Produktbilder und Benutzer-Uploads</h4>
   <p class="text-xs text-slate-300 mt-2">Ein Produktbild wird nicht sinnvoll als Datei auf jedem einzelnen EC2-Server gespeichert. Bei Auto Scaling könnten neue Server das Bild nicht besitzen, und beim Löschen einer Instanz wäre es weg.</p>
   <p class="text-xs text-slate-300 mt-2">Stattdessen liegt das Bild als <strong class="text-amber-400">Objekt</strong> in S3:</p>
-  <div class="bg-slate-800 p-2 rounded text-xs font-mono text-slate-300 mt-2">
-    Bucket: shop-products<br>
-    Key: products/4711/main.jpg<br>
-    Object: eigentliche Bilddaten + Metadaten
+  <div class="s3-object mt-2">
+    <div class="s3-part">
+      <div class="s3-part-label">Bucket</div>
+      <div class="s3-part-value">shop-products</div>
+    </div>
+    <div class="s3-part">
+      <div class="s3-part-label">Key</div>
+      <div class="s3-part-value">products/4711/main.jpg</div>
+    </div>
+    <div class="s3-part">
+      <div class="s3-part-label">Object</div>
+      <div class="s3-part-value">Bilddaten + Metadaten</div>
+    </div>
   </div>
   <p class="text-xs text-slate-300 mt-2">Die <strong class="text-amber-400">Datenbank</strong> speichert nur Produktnummer und Objektpfad. Die Anwendung liest oder erzeugt eine URL für das S3-Objekt.</p>
 </div>
@@ -3733,12 +3889,31 @@
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Direkter Upload mit Pre-signed URL</h4>
-  <div class="bg-slate-800 p-3 rounded text-xs font-mono text-slate-300 space-y-1 mt-2">
-    <div>1. Benutzer fragt Webanwendung nach Upload-Möglichkeit</div>
-    <div>2. Anwendung prüft Berechtigung</div>
-    <div>3. Anwendung erzeugt zeitlich begrenzte Pre-signed URL</div>
-    <div>4. Browser lädt Datei direkt nach S3</div>
-    <div>5. Anwendung speichert Objektpfad in Datenbank</div>
+  <div class="step-flow mt-2">
+    <div class="step-block">
+      <span class="step-num">1</span>
+      <span class="step-text">Benutzer fragt Webanwendung nach Upload</span>
+    </div>
+    <span class="step-arrow">→</span>
+    <div class="step-block">
+      <span class="step-num">2</span>
+      <span class="step-text">Anwendung prüft Berechtigung</span>
+    </div>
+    <span class="step-arrow">→</span>
+    <div class="step-block">
+      <span class="step-num">3</span>
+      <span class="step-text">Anwendung erzeugt Pre-signed URL</span>
+    </div>
+    <span class="step-arrow">→</span>
+    <div class="step-block">
+      <span class="step-num">4</span>
+      <span class="step-text">Browser lädt direkt nach S3</span>
+    </div>
+    <span class="step-arrow">→</span>
+    <div class="step-block">
+      <span class="step-num">5</span>
+      <span class="step-text">Anwendung speichert Pfad in DB</span>
+    </div>
   </div>
   <p class="text-xs text-slate-400 mt-2">Große Dateien müssen nicht erst durch den App-Server transportiert werden.</p>
 </div>`,
@@ -3837,10 +4012,21 @@
 <p>Route 53 liefert DNS-Namen, ermöglicht Routing-Policies und verbindet Domains mit AWS-Ressourcen weltweit.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">DNS-Auflösungsablauf</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    1. DNS-Resolver fragt Route 53 nach shop.example.de<br>
-    2. Route 53 antwortet mit Alias-Ziel (ALB oder CloudFront)<br>
-    3. Browser verbindet sich mit dem aufgelösten Ziel
+  <div class="step-flow mt-2">
+    <div class="step-block">
+      <span class="step-num">1</span>
+      <span class="step-text">DNS-Resolver fragt Route 53</span>
+    </div>
+    <span class="step-arrow">→</span>
+    <div class="step-block">
+      <span class="step-num">2</span>
+      <span class="step-text">Route 53 antwortet mit Alias-Ziel</span>
+    </div>
+    <span class="step-arrow">→</span>
+    <div class="step-block">
+      <span class="step-num">3</span>
+      <span class="step-text">Browser verbindet sich mit dem Ziel</span>
+    </div>
   </div>
   <p class="text-xs text-slate-400 mt-2">Route 53 transportiert keine Produktseite. DNS liefert nur die Information, wohin sich der Client verbinden soll.</p>
 </div>
@@ -3954,10 +4140,21 @@
 <p>Route 53 provides DNS names, enables routing policies and connects domains with AWS resources worldwide.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">DNS Resolution Process</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    1. DNS resolver queries Route 53 for shop.example.de<br>
-    2. Route 53 responds with alias target (ALB or CloudFront)<br>
-    3. Browser connects to the resolved target
+  <div class="step-flow mt-2">
+    <div class="step-block">
+      <span class="step-num">1</span>
+      <span class="step-text">DNS resolver queries Route 53</span>
+    </div>
+    <span class="step-arrow">→</span>
+    <div class="step-block">
+      <span class="step-num">2</span>
+      <span class="step-text">Route 53 responds with alias target</span>
+    </div>
+    <span class="step-arrow">→</span>
+    <div class="step-block">
+      <span class="step-num">3</span>
+      <span class="step-text">Browser connects to the target</span>
+    </div>
   </div>
   <p class="text-xs text-slate-400 mt-2">Route 53 does not transport product pages. DNS only provides the information about where the client should connect.</p>
 </div>
