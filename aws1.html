@@ -511,9 +511,45 @@
 <p>Das Cloud-Grundmodell erklärt, warum AWS dir Hardware, Netzwerk und Standort verwaltet, während du Verantwortung für Konfiguration, Daten und Anwendungen trägst.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">On-Premise vs AWS:
-[Kunde] -> [AWS Infrastruktur] -> [Managed Services]
-AWS liefert Rechenzentren, du nutzt Ressourcen über APIs.</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">On-Premise vs AWS:
+        [Kunde] -> [AWS Infrastruktur] -> [Managed Services]
+        AWS liefert Rechenzentren, du nutzt Ressourcen über APIs.
+
+        Shared Responsibility Model:
+        AWS                               Du
+        EC2                               Hardware und Hypervisor
+                                  Betriebssystem, Patches, Anwendung,
+                                  Security Group
+        S3                                Betrieb und Haltbarkeit des Speicherdienstes
+                                  Bucket-Policies, Verschlüsselungsauswahl,
+                                  Datenklassifikation
+        Managed Datenbank                 Plattform, Backups je Konfiguration,
+                                  Infrastruktur
+                                  Benutzer, Daten, Schema, Zugriff und
+                                  passende Einstellungen
+
+        Verantwortungsaufteilung nach Diensttyp:
+        IaaS (EC2): Du verwaltest OS, Anwendungen, Daten
+        PaaS (RDS): Du verwaltest Anwendungen, Daten
+        SaaS (Salesforce): Du verwaltest nur Daten
+
+Shared Responsibility Model:
+AWS                               Du
+EC2                               Hardware und Hypervisor
+                                  Betriebssystem, Patches, Anwendung,
+                                  Security Group
+S3                                Betrieb und Haltbarkeit des Speicherdienstes
+                                  Bucket-Policies, Verschlüsselungsauswahl,
+                                  Datenklassifikation
+Managed Datenbank                 Plattform, Backups je Konfiguration,
+                                  Infrastruktur
+                                  Benutzer, Daten, Schema, Zugriff und
+                                  passende Einstellungen
+
+Verantwortungsaufteilung nach Diensttyp:
+IaaS (EC2): Du verwaltest OS, Anwendungen, Daten
+PaaS (RDS): Du verwaltest Anwendungen, Daten
+SaaS (Salesforce): Du verwaltest nur Daten</pre>
 </div>`
                     },
                     {
@@ -523,8 +559,25 @@ AWS liefert Rechenzentren, du nutzt Ressourcen über APIs.</pre>
 <p>AWS globaler Infrastrukturaufbau mit Regionen, Availability Zones und Edge Locations für Latenz, Ausfallsicherheit und Content Delivery.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Regionen -> AZs -> Edge Locations
-Region = Sammlung von AZs; Edge = CDN-Cache in Städten.</pre>
+  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Region Frankfurt
+| 
++-- AZ A: Public Subnet + Private App-Subnet + EC2 A
+| 
++-- AZ B: Public Subnet + Private App-Subnet + EC2 B
+
+Fällt nur AZ A aus, kann der Load Balancer Anfragen weiterhin an EC2 B senden.
+Läuft dagegen alles nur auf einem Server in einer AZ, ist diese AZ ein Single Point of Failure.
+
+CloudFront löst ein anderes Problem. Ein Kunde in Spanien muss ein Produktbild nicht jedes Mal aus Frankfurt laden.
+Das Bild kann an einem Edge-Standort in Kundennähe zwischengespeichert werden.
+
+Was die drei Ebenen nicht leisten:
+• Eine zweite AZ schützt nicht vor einem vollständigen Regionsausfall.
+• CloudFront ersetzt keinen App-Server und keine Datenbank.
+• Eine zweite Region synchronisiert sich nicht automatisch. Daten, DNS, Deployments und Failover müssen geplant werden.
+
+Sinn dahinter: AZs verteilen Ausfallrisiken innerhalb einer Region. Edge Locations verkürzen den Weg zum Nutzer.
+Multi-Region schützt gegen größere regionale Ausfälle oder erfüllt globale Anforderungen.</pre>
 </div>`
                     },
                     {
@@ -534,11 +587,28 @@ Region = Sammlung von AZs; Edge = CDN-Cache in Städten.</pre>
 <p>IAM steuert wer was in AWS tun darf: Benutzer, Gruppen, Rollen und Policies formen die Zugriffskontrolle.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">IAM: User
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">IAM: User
   |
   +---> Policies
   +---> Roles
-Rollen geben temporäre Rechte ohne dauerhafte Anmeldedaten.</pre>
+Rollen geben temporäre Rechte ohne dauerhafte Anmeldedaten.
+
+Begriffe in Policies:
+Principal: Wer stellt die Anfrage?
+Action: Welche AWS-API-Aktion soll ausgeführt werden?
+Resource: Auf welches konkrete Objekt oder welchen Dienst bezieht sich die Aktion?
+ARN: Eindeutiger AWS-Name einer Ressource.
+Condition: Unter welcher zusätzlichen Bedingung gilt die Regel?
+
+Least Privilege Prinzip:
+Die Anwendung bekommt nicht "AWS-Zugriff", sondern eine kleine,
+exakt definierte Fähigkeit.
+
+Beispiel für S3-Zugriff:
+Principal: ShopAppRole
+Action: s3:GetObject
+Resource: arn:aws:s3:::shop-products/*
+Erlaubnis: Bilder lesen erlaubt, alles andere standardmäßig verboten</pre>
 </div>`
                     },
                     {
@@ -548,8 +618,24 @@ Rollen geben temporäre Rechte ohne dauerhafte Anmeldedaten.</pre>
 <p>Rollen ermöglichen sichere, temporäre Zugriffe innerhalb und zwischen AWS-Konten durch STS und Vertrauensbeziehungen.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Account A -> AssumeRole -> Account B
-Trust Policy erlaubt Zugriff nur bei korrekter Verwendung.</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Account A -> AssumeRole -> Account B
+Trust Policy erlaubt Zugriff nur bei korrekter Verwendung.
+
+Trust Policy vs Permission Policy:
+Trust Policy: Wer darf die Rolle übernehmen? (Eingangstür)
+Permission Policy: Was darf die Rolle nach der Übernahme tun? (Schlüsselbund)
+
+Beispiel für Cross-Account Zugriff:
+GitHub Actions -> STS AssumeRole -> DeployRole (Produktionskonto)
+-> EC2 / S3 / Terraform-Backend
+
+Warum beide Policies nötig sind:
+- Trust stimmt, Permission fehlt: Rolle kann übernommen werden, API-Aufrufe scheitern
+- Permission wäre ausreichend, Trust stimmt nicht: Rolle kann gar nicht übernommen werden
+
+Temporäre Credentials:
+- Begrenzen Zeitraum möglichen Missbrauchs
+- Ersetzen aber keine sauber eingeschränkten Berechtigungen</pre>
 </div>`
                     },
                     {
@@ -559,10 +645,54 @@ Trust Policy erlaubt Zugriff nur bei korrekter Verwendung.</pre>
 <p>Mit Organizations strukturierst du Konten, definierst OUs und ergänzt Governance per SCPs als globale Guardrails.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Root
-  +-- OU Prod
-  +-- OU Dev
-SCPs legen maximale Service-Nutzung fest, unabhängig von IAM-Permissions.</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">AWS Organization
+|
++-- Security OU
+|  |
+|  +-- Log-Archive Account
+|  |
+|  +-- Security-Tools Account
+|
++-- Non-Production OU
+|  |
+|  +-- Development Account
+|  |
+|  +-- Test Account
+|
++-- Production OU
+   |
+   +-- Shop Production Account
+
+Die Kontentrennung schafft eine harte Grenze.
+Ein Fehler im Development Account verändert nicht automatisch
+Ressourcen im Production Account.
+
+Ein SCP könnte im Production OU beispielsweise verhindern,
+dass CloudTrail deaktiviert oder eine nicht freigegebene
+Region verwendet wird. Das SCP gibt dem Entwickler aber keine Rechte.
+Es legt nur fest, was selbst mit einer IAM-Erlaubnis maximal möglich wäre.
+
+Merksatz: IAM verteilt Schlüssel innerhalb eines Kontos.
+SCPs legen fest, welche Türen in einem ganzen Bereich
+garantiert geöffnet werden dürfen.
+
+Warum mehrere Konten?
+• Geringerer Blast Radius
+• Getrennte Kosten und Budgets
+• Getrennte Entwicklungs-, Test- und Produktionsumgebungen
+• Zentrale Sicherheits- und Logging-Konten
+• Klarere Compliance-Grenzen
+
+SCP ist keine Berechtigung:
+Ein SCP erteilt keinen Zugriff. Es setzt nur die Obergrenze.
+Ein User kann eine Aktion nur ausführen, wenn seine IAM-Rechte sie erlauben
+UND kein SCP sie blockiert.
+
+Typische Guardrails:
+• Nutzung unerwünschter Regionen blockieren
+• Deaktivieren von CloudTrail oder GuardDuty verhindern
+• organizations:LeaveOrganization sperren
+• Löschen zentraler Logs verhindern</pre>
 </div>`
                     },
                 ]
@@ -578,12 +708,25 @@ SCPs legen maximale Service-Nutzung fest, unabhängig von IAM-Permissions.</pre>
 <p>EC2 ist der grundlegende IaaS-Dienst für virtuelle Maschinen in AWS mit vielen Instanztypen und Konfigurationsmöglichkeiten.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">EC2-Instance
-- AMI
-- Instance Type
-- EBS
-- Security Group
-- IAM Role</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Bausteine einer EC2-Instanz:
+AMI und Betriebssystem
+CPU- und RAM-Größe
+Netzwerk und IP-Adressen
+Security Groups
+EBS-Volumes
+IAM Role
+Startskripte und Tags
+
+EC2 ist IaaS. AWS betreibt die physische Infrastruktur,
+du verwaltest das Gastbetriebssystem und deine Software.
+
+Instanzfamilien:
+T-Familie: kostengünstig, burstfähig, variable leichte Last
+M-Familie: ausgewogenes Verhältnis aus CPU und RAM
+C-Familie: CPU-intensive Verarbeitung
+R/X-Familie: hoher Arbeitsspeicherbedarf
+I/D-Familie: hoher lokaler Storage-Durchsatz
+G/P-Familie: GPU, Grafik, Machine Learning</pre>
 </div>`
                     },
                     {
@@ -593,9 +736,32 @@ SCPs legen maximale Service-Nutzung fest, unabhängig von IAM-Permissions.</pre>
 <p>EC2-Netzwerk, Instance Metadata und Placement-Entscheidungen bestimmen Erreichbarkeit, Sicherheit und Performance.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">EC2 -> ENI -> Subnet -> Route Table
-Metadata Endpoint 169.254.169.254
-Placement Group: Cluster/Spread/Partition</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Browser -> öffentliche Adresse / Load Balancer -> Route -> Subnetz -> ENI -> EC2
+
+Die private IP bleibt normalerweise an der ENI erhalten.
+Eine automatisch zugewiesene öffentliche IPv4-Adresse kann
+sich nach Stop und Start ändern.
+Eine Elastic IP ist eine bewusst reservierte statische öffentliche Adresse.
+
+Warum nicht jeder Server eine Elastic IP braucht:
+In einer sauberen Webarchitektur sind die App-Server privat.
+Nur der öffentliche Load Balancer ist von außen erreichbar.
+ Dadurch müssen weder IP-Adressen der App-Server
+veröffentlicht noch bei Skalierung gepflegt werden.
+
+IMDS in einer echten Anwendung:
+Eine EC2-Anwendung mit IAM Role benötigt temporäre Credentials.
+Sie liest diese über den Instance Metadata Service.
+Deshalb ist IMDS sicherheitsrelevant. IMDSv2 verlangt einen Session-Token
+er erschwert den Diebstahl dieser Credentials über bestimmte Angriffswege.
+
+Placement Groups:
+Drei verschiedene Anforderungen
+- Cluster Placement Group: minimale Latenz und hoher Durchsatz zwischen Instanzen
+- Spread Placement Group: möglichst getrennte Hardware für wenige kritische Instanzen
+- Partition Placement Group: große verteilte Systeme über getrennte Fehlerdomänen
+
+Cluster priorisiert Performance, Spread Isolation und Partition skalierbare Fehlerdomänen.</pre>
 </div>`
                     },
                     {
@@ -605,9 +771,46 @@ Placement Group: Cluster/Spread/Partition</pre>
 <p>EBS ist persistent und eignet sich für Daten, die zwischen Stops erhalten bleiben sollen; Instance Store ist flüchtig und sehr schnell.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">EBS: persistentes Volume
-Instance Store: lokal, verloren beim Stoppen
-Use case: OS + Daten auf EBS, Cache auf Instance Store.</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Eigenschaft
+EBS
+Instance Store
+Art
+netzwerkgebundener Blockspeicher
+lokale physische Platte des Hosts
+Dauerhaftigkeit
+persistent
+temporär
+Stop/Start
+Daten bleiben
+Daten können verloren gehen
+Snapshots
+unterstützt
+kein nativer EBS-Snapshot
+Einsatz
+Root-Volume, Dateisysteme, Datenbanken
+Cache, Scratch, Zwischenverarbeitung
+
+Merksatz: EBS ist die dauerhafte virtuelle Festplatte.
+Instance Store ist sehr schneller Arbeitsbereich, aber kein System of Record.
+
+Wichtige EBS-Typen:
+gp3: Standardempfehlung für viele Workloads; Größe, IOPS und Durchsatz können weitgehend getrennt gewählt werden.
+io2: für besonders hohe und konsistente IOPS, niedrige Latenz und kritische Transaktionssysteme.
+
+HDD-Typen eignen sich eher für sequenziellen Durchsatz als für viele zufällige I/O-Operationen.
+
+Verschlüsselung, Snapshots und Änderung:
+EBS-Verschlüsselung nutzt KMS und schützt Volume, Snapshots und den Datenpfad zwischen Host und Volume.
+EBS-Volume ist an eine AZ gebunden und kann nur an Instanzen derselben AZ angehängt werden.
+
+Snapshots:
+sind Point-in-Time-Sicherungen
+speichern nach dem ersten Snapshot nur geänderte Blöcke
+können neue Volumes erzeugen
+können für Disaster Recovery in andere Regionen kopiert werden
+
+Bei einer Größenänderung reicht die AWS-Änderung allein nicht.
+Danach müssen je nach Betriebssystem Partition und Dateisystem erweitert werden.</pre>
 </div>`
                     },
                     {
@@ -617,10 +820,42 @@ Use case: OS + Daten auf EBS, Cache auf Instance Store.</pre>
 <p>EC2-Kosten hängen von dem gewählten Instance-Typ, der Region, der Nutzung und der Tenancy-Option ab.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Shared Tenancy
-Dedicated Host
-Dedicated Instance
-Kosten = vCPU + RAM + EBS + Netzwerk + Lizenz</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Praxis: Baseline, Spitzenlast und Batch-Jobs
+Grundlast der App-Server -> Savings Plan oder passende Reservierung nach Messung
+Unvorhersehbare Spitzen -> On-Demand
+Unterbrechbarer Bild-Job -> Spot
+Garantierter Start in einer AZ -> Capacity Reservation
+Lizenz an physische CPUs gebunden -> Dedicated Host
+
+Die günstigste Option ist nur dann die beste, wenn sie zur technischen Anforderung passt.
+Ein einzelner nicht unterbrechbarer Datenbankserver auf Spot wäre zwar billig, aber nicht belastbar.
+
+Erst messen, dann binden
+Erst Nutzung messen, dann sinnvoll binden.
+
+Rightsizing ist oft die erste Einsparung:
+Eine halb ausgelastete kleinere Instanz kann sinnvoller sein als ein Rabatt auf
+eine deutlich zu große Instanz.
+
+9.1 Kaufmodelle
+Modell | Bindung | Unterbrechung | Geeignet für
+On-Demand | keine | nein | kurze, unbekannte oder neue Workloads
+Spot | keine | möglich | Batch, CI, Rendering, fehlertolerante Systeme
+Reserved Instances | 1 oder 3 Jahre | nein | stabile EC2-Nutzung
+Savings Plans | 1 oder 3 Jahre Ausgabenbindung | nein | planbare Grundlast mit mehr Flexibilität
+Capacity Reservation | reservierte Kapazität in einer AZ | nein | garantierter Start bei kritischen Ereignissen
+Dedicated Host | physischer Host | nein | BYOL, Compliance und HostSichtbarkeit
+
+9.2 Rightsizing
+Der günstigste Rabatt hilft wenig, wenn die Instanz dauerhaft viel zu groß ist.
+CloudWatch-Metriken, Compute Optimizer und Kostenberichte helfen beim Rightsizing.
+Erst Nutzung messen, dann sinnvoll binden.
+
+9.3 Tenancy
+• Shared: Standard, kostengünstig, Hardware wird sicher mit anderen Kunden geteilt.
+• Dedicated Instance: Instanzen laufen auf Hardware, die nur deinem Konto zugeordnet ist,
+  ohne volle Host-Sicht.
+• Dedicated Host: vollständiger physischer Host mit Lizenz- und Platzierungskontrolle.</pre>
 </div>`
                     },
                     {
@@ -630,10 +865,56 @@ Kosten = vCPU + RAM + EBS + Netzwerk + Lizenz</pre>
 <p>VPC ist dein privates Netzwerk in AWS. CIDR-Block und Subnetze definieren, wie IPs verteilt werden und wie Routing funktioniert.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">VPC 10.0.0.0/16
-Subnet A: 10.0.1.0/24
-Subnet B: 10.0.2.0/24
-Route Table steuert den Verkehr.</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">VPC 10.0.0.0/16
+|
++-- AZ A
+|
++-- Public-A
+|
++-- Private-A
+|
++-- AZ B
++-- Public-B
++-- Private-B
+
+10.0.1.0/24
+10.0.11.0/24
+10.0.2.0/24
+10.0.12.0/24
+
+Die öffentlichen Subnetze enthalten den Load Balancer und bei Bedarf NAT Gateways.
+Die privaten Subnetze enthalten die App-Server und Datenbankkomponenten.
+
+Was ein Subnetz wirklich öffentlich macht:
+Ein Subnetz wird nicht durch seinen Namen öffentlich.
+Entscheidend ist die Route Table. Für IPv4 enthält ein öffentliches Subnetz typischerweise:
+10.0.0.0/16 -> local
+0.0.0.0/0 -> Internet Gateway
+
+Damit eine EC2-Instanz direkt aus dem Internet erreichbar ist,
+braucht sie zusätzlich eine öffentliche Adresse und passende Security-Regeln.
+Eine Route zum IGW allein reicht nicht.
+
+Warum CIDR-Planung später wichtig wird:
+Wenn später ein zweites VPC per Peering angebunden werden soll,
+dürfen sich die Adressbereiche nicht überschneiden.
+Ein unüberlegt gewähltes 10.0.0.0/16 in jedem VPC führt deshalb später zu Routingproblemen.
+
+10.1 VPC:
+Eine VPC ist dein logisch isoliertes Netzwerk in AWS.
+Sie enthält CIDR-Bereiche, Subnetze, Route Tables, Gateways,
+Security Groups, NACLs und Netzwerkinterfaces.
+
+10.2 CIDR:
+CIDR bestimmt die Größe eines Netzbereichs:
+/16: 65.536 Adressen gesamt, 65.531 nutzbar
+/24: 256 Adressen gesamt, 251 nutzbar
+/26: 64 Adressen gesamt, 59 nutzbar
+/28: 16 Adressen gesamt, 11 nutzbar
+
+AWS reserviert in jedem Subnetz fünf Adressen.
+CIDR-Bereiche sollten ausreichend groß und zwischen VPCs nicht überlappend geplant werden,
+besonders wenn Peering oder Transit Gateway vorgesehen ist.</pre>
 </div>`
                     },
                 ]
@@ -649,9 +930,30 @@ Route Table steuert den Verkehr.</pre>
 <p>IGW, NAT-Gateway und Bastion Hosts steuern sicheren Internetzugang und erlauben administrative Verbindungen in private Subnetze.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Internet -> IGW -> Public Subnet
-Private Subnet -> NAT -> Internet
-Admin -> Bastion -> Private EC2</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Fall 1: Der private App-Server lädt Updates herunter
+Der Server startet die Verbindung selbst. Die private Route Table zeigt für unbekannte IPv4-Ziele auf ein NAT Gateway
+im öffentlichen Subnetz.
+Private EC2 -> Private Route Table -> NAT Gateway -> Internet Gateway -> Repository
+
+Antwortpakete kommen über denselben Weg zurück. Eine neue Verbindung aus dem Internet direkt zur privaten EC2Instanz wird dadurch nicht ermöglicht.
+
+Fall 2: Ein Administrator braucht eine Shell
+Das ist keine normale ausgehende Anwendungsverbindung. Es ist ein Managementzugriff. Mögliche Lösungen sind:
+• Systems Manager Session Manager
+• EC2 Instance Connect Endpoint
+• klassischer Bastion Host
+Admin -> IAM-authentifizierter Managementpfad -> private EC2
+
+NAT Gateway und Bastion Host werden oft verwechselt:
+NAT ist ein Egress-Weg für Ressourcen.
+Ein Bastion Host ist ein Einstiegspunkt für Menschen oder Admin-Werkzeuge.
+
+Warum VPC Endpoints zusätzlich sinnvoll sind:
+Wenn die private EC2 nur S3 und Systems Manager benötigt, muss dieser Verkehr nicht über NAT ins öffentliche
+Servicenetz laufen. Passende VPC Endpoints bieten einen privaten AWS-Pfad und können NAT-Kosten sowie
+öffentliche Abhängigkeiten reduzieren.
+
+Merksatz: NAT ist der Paketausgang. Bastion oder Managed Access ist der Personeneingang.</pre>
 </div>`
                     },
                     {
@@ -661,10 +963,28 @@ Admin -> Bastion -> Private EC2</pre>
 <p>SGs sind stateful Firewall-Regeln auf Instance-Ebene, NACLs sind stateless auf Subnetz-Ebene, Network Firewall bietet zentrale Regeln.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Inbound/Outbound
-SG: stateful -> Antwort erlaubt
-NACL: stateless -> beide Richtungen definieren
-Firewall = zentraler Sicherheitsdienst</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">sitzt an ENI oder Ressource
+stateful: Rückverkehr einer erlaubten Verbindung wird automatisch zugelassen
+nur Allow-Regeln
+alle Regeln werden gemeinsam betrachtet
+kann andere Security Groups als Quelle referenzieren
+
+Ein typisches dreistufiges Modell:
+Web-SG erlaubt 443 aus dem Internet
+App-SG erlaubt Anwendungsport nur von Web-SG
+DB-SG erlaubt Datenbankport nur von App-SG
+
+12.2 NACL
+sitzt am Subnetz
+stateless: Hin- und Rückrichtung benötigen passende Regeln
+Allow und Deny möglich
+Regeln werden aufsteigend nach Nummer geprüft; erste passende Regel gewinnt
+Custom NACL startet ohne Freigaben
+
+Fehlende Ephemeral-Port-Regeln sind ein häufiger Grund für Timeouts, obwohl die Security Group korrekt aussieht.
+
+12.3 AWS Network Firewall
+Network Firewall ist eine zentral verwaltete, stateful Inspektions- und Filterlösung für komplexe Ingress-, Egress- und East-West-Regeln. Sie ergänzt Security Groups und NACLs, ersetzt sie aber nicht automatisch. Der Dienst benötigt bewusstes Routing durch Firewall-Subnetze und erhöht Kosten und Komplexität.</pre>
 </div>`
                     },
                     {
@@ -674,11 +994,51 @@ Firewall = zentraler Sicherheitsdienst</pre>
 <p>Private Zugriffe wie VPC Endpoint, Peering und VPN/Transit Gateway ermöglichen interne Kommunikation ohne öffentliches Internet.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Service Endpoint
-VPC Peering
-VPN
-Transit Gateway
-Private Link</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Praxis: Welche Verbindung passt zu welchem Problem?
+Private EC2 greift auf S3 zu
+Für S3 eignet sich ein Gateway Endpoint. Die Route Table erkennt S3-Zielpräfixe und leitet sie über den Endpoint. Der Verkehr benötigt dafür kein NAT Gateway.
+
+Private EC2 ruft Secrets Manager auf
+Viele andere AWS-Dienste werden über Interface Endpoints angebunden. Im Subnetz entsteht eine ENI mit privater IP.
+Private DNS kann den normalen Dienstnamen auf diese private Adresse auflösen.
+
+Zwei VPCs müssen direkt miteinander sprechen
+Für wenige, klar definierte Verbindungen eignet sich VPC Peering. Beide Seiten benötigen nicht überlappende CIDRs, passende Routen und Sicherheitsregeln.
+VPC Shop 10.0.0.0/16 <---- Peering ----> VPC Analytics 10.20.0.0/16
+
+Peering ist nicht transitiv. Wenn Shop mit Analytics und Analytics mit Security verbunden ist, entsteht daraus nicht automatisch ein Weg von Shop zu Security.
+
+Viele VPCs und ein Rechenzentrum
+Bei vielen VPCs wird ein Peering-Netz unübersichtlich. Transit Gateway bündelt die Verbindungen als Hub. Das Rechenzentrum kann über Site-to-Site VPN oder Direct Connect angebunden werden.
+VPN: schneller einzurichten, läuft über das Internet, gut als Einstieg oder Backup.
+Direct Connect: dedizierte Verbindung, planbarer, aber teurer und aufwendiger.
+
+Auswahlregel: Endpoint verbindet ein VPC privat mit einem Dienst. Peering verbindet zwei VPCs. Transit Gateway verbindet viele Netze. VPN oder Direct Connect verbindet AWS mit On-Premises.
+
+13.1 VPC Endpoints und PrivateLink
+Gateway und Interface Endpoints
+Typ | Umsetzung | Dienste | Kostenmodell
+Gateway Endpoint | Route-Table-Ziel | S3 und DynamoDB | kein üblicher stündlicher Endpoint-Preis
+Interface Endpoint | ENI mit privater IP | viele AWS- und PrivateLinkDienste | stündlich plus Datenverarbeitung
+Endpoint Policies begrenzen, welche Aktionen über den Endpoint möglich sind. Bei Interface Endpoints müssen DNS, Security Groups und Subnetzplatzierung stimmen.
+
+13.2 VPC Peering
+Peering verbindet zwei VPCs direkt über private IPs. Voraussetzungen:
+• nicht überlappende CIDRs
+• Routen auf beiden Seiten
+• passende Security Groups und NACLs
+• Akzeptieren der Verbindung bei Cross-Account
+
+Peering ist nicht transitiv. A-B und B-C ergeben keine Verbindung A-C. Bei vielen VPCs entsteht ein schwer wartbares Mesh.
+
+13.3 Transit Gateway
+Transit Gateway ist ein regionaler Routing-Hub für viele VPCs und On-Premises-Netze. Er vereinfacht Hub-and-Spoke-Topologien und transitive Verbindungen, benötigt aber sorgfältige Route Tables, Segmentierung und Kostenkontrolle.
+
+13.4 VPN und Direct Connect
+Site-to-Site VPN: schnell eingerichtet, niedriger Einstieg, gut als Backup
+Internetabhängigkeit, schwankendere Latenz und Bandbreite
+Direct Connect: privater dedizierter Pfad, planbarere Leistung, längere Bereitstellung, höhere Fixkosten
+In Enterprise-Architekturen wird Direct Connect häufig durch VPN als Ausweichpfad ergänzt.</pre>
 </div>`
                     },
                     {
@@ -688,9 +1048,48 @@ Private Link</pre>
 <p>Flow Logs erfassen Netzwerkverkehr, CloudTrail protokolliert API-Aktionen. Zusammen bilden sie die Grundlage für Sicherheitsanalyse und Audit.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Flow Logs -> ENI/Subnetz/VPC
-CloudTrail -> API Calls
-Analyse für Fehlersuche und Compliance.</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Praxis: Die Anwendung erreicht die Datenbank nicht
+Der App-Server meldet einen Timeout beim Verbindungsaufbau zur Datenbank.
+
+Was Flow Logs beantworten können:
+• Welche Quell- und Ziel-IP waren beteiligt?
+• Welcher Port wurde verwendet?
+• Wurde der Verkehr akzeptiert oder abgelehnt?
+• Welche ENI war betroffen?
+
+Ein REJECT kann auf eine NACL- oder Security-Konfiguration hinweisen.
+Ein ACCEPT bedeutet nur, dass der Netzwerkpfad an dieser Stelle erlaubt war.
+Die Anwendung kann trotzdem nicht lauschen oder intern einen Fehler haben.
+
+Was CloudTrail stattdessen beantwortet:
+CloudTrail zeigt Verwaltungs- und API-Ereignisse.
+Beispiel: Kann zeigen, dass kurz vor dem Fehler eine SecurityGroup-Regel gelöscht wurde.
+
+Flow Logs: "Paket von 10.0.11.20 zu 10.0.21.15:5432 wurde abgelehnt."
+CloudTrail: "User X hat um 14:03 eine SG-Regel gelöscht."
+App-Log: "Connection timeout zur Datenbank."
+
+Die drei Datenquellen ergänzen sich. Observability bedeutet nicht, möglichst viele Logs zu sammeln,
+sondern die richtigen Signale miteinander zu verbinden.
+
+VPC Flow Logs zeichnen Metadaten zu Netzwerkverkehr auf: Quell- und Ziel-IP, Ports, Protokoll sowie ACCEPT oder REJECT.
+Sie enthalten keine vollständigen Paketdaten.
+
+Mögliche Ziele:
+• CloudWatch Logs für zeitnahe Suche und Alarme
+• S3 für günstige Langzeitaufbewahrung und Athena-Auswertung
+• Streaming-Pipeline für SIEM oder OpenSearch
+
+Unterschied:
+• Flow Logs: Wer kommunizierte mit wem über welchen Netzwerkpfad?
+• CloudTrail: Wer rief welche AWS-API auf und änderte die Konfiguration?
+
+Fehlersuche bei einem Timeout:
+1. Zeitfenster bestimmen.
+2. Quell-IP, Ziel-IP und Port filtern.
+3. ACCEPT oder REJECT prüfen.
+4. Route Table, NACL und Security Group vergleichen.
+5. Danach Anwendungs- und Betriebssystemlogs prüfen.</pre>
 </div>`
                     },
                     {
@@ -700,11 +1099,52 @@ Analyse für Fehlersuche und Compliance.</pre>
 <p>S3 speichert Objekte in Buckets, bietet Versionierung, Lifecycle, Verschlüsselung und kann als statische Website dienen.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Diagramm / Layout</h4>
-  <pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Bucket
-  +-- Objekt 1
-  +-- Objekt 2
-Versioning = on/off
-Lifecycle = Glacier, automatische Bereinigung.</pre>
+<pre class="whitespace-pre-wrap text-xs bg-slate-800 p-3 rounded-lg">Praxis: Produktbilder und Benutzer-Uploads
+Ein Produktbild wird nicht sinnvoll als Datei auf jedem einzelnen EC2-Server gespeichert. Bei Auto Scaling könnten neue Server das Bild nicht besitzen, und beim Löschen einer Instanz wäre es weg.
+Stattdessen liegt das Bild als Objekt in S3:
+Bucket: shop-products
+Key: products/4711/main.jpg
+Object: eigentliche Bilddaten + Metadaten
+
+Die Datenbank speichert nur Informationen wie Produktnummer und Objektpfad. Die Anwendung liest oder erzeugt eine URL für das S3-Objekt.
+
+Direkter Upload mit einer Pre-signed URL
+38. Der Benutzer fragt die Webanwendung nach einer Upload-Möglichkeit.
+39. Die Anwendung prüft, ob der Benutzer berechtigt ist.
+40. Die Anwendung erzeugt eine zeitlich begrenzte Pre-signed URL.
+41. Der Browser lädt die Datei direkt nach S3.
+42. Die Anwendung speichert den Objektpfad in der Datenbank.
+Dadurch muss eine große Datei nicht erst durch den App-Server transportiert werden.
+
+Versioning, Object Lock und Lifecycle lösen verschiedene Probleme
+• Versioning: Eine ersetzte oder gelöschte Datei kann aus einer älteren Version wiederhergestellt werden.
+• Object Lock: Ein Objekt darf für eine festgelegte Zeit nicht überschrieben oder gelöscht werden.
+• Lifecycle: Alte Objekte werden automatisch in günstigere Klassen verschoben oder nach Regeln entfernt.
+• Replication: Objekte werden in einen anderen Bucket, bei CRR auch in eine andere Region, kopiert.
+
+Lifecycle ist kein Backup und Replication ist keine automatische Löschsperre. Jeder Mechanismus hat einen anderen Zweck.
+
+15.1 Bucket und Objekt
+S3 ist Objektspeicher und keine klassische Festplatte. Ein Objekt besteht aus Daten, Key und Metadaten. Ein Bucket bildet den Namens- und Policy-Rahmen.
+
+15.2 Zugriffsschutz
+• Block Public Access als sichere Grundeinstellung
+• IAM Policies für Berechtigungen eines Principals
+• Bucket Policies für Regeln direkt am Bucket und Cross-Account-Zugriff
+• ACLs sind ein älterer, feingranularer Mechanismus und werden möglichst vermieden
+• Pre-Signed URLs geben zeitlich begrenzten Zugriff auf ein einzelnes Objekt
+
+15.3 Versionierung und Schutz vor Löschen
+Versionierung bewahrt ältere Objektversionen. Ein normales Löschen erzeugt oft einen Delete Marker statt die alten Daten sofort zu entfernen. MFA Delete erschwert kritische Versionierungs- und Löschaktionen.
+Object Lock implementiert WORM-Aufbewahrung:
+• Governance Mode: privilegierte Benutzer können unter definierten Bedingungen übersteuern.
+• Compliance Mode: während der Aufbewahrungszeit ist selbst administratives Löschen nicht möglich.
+
+15.4 Verschlüsselung
+Praktische Auswahl
+• SSE-S3: einfache serverseitige Verschlüsselung, Schlüsselverwaltung durch S3.
+• SSE-KMS: zusätzliche Kontrolle über Schlüsselrichtlinien und nachvollziehbare KMS-Nutzung.
+</pre>
 </div>`
                     },
                 ]
@@ -1167,7 +1607,7 @@ HCL = HashiCorp Configuration Language</pre>
                     item.className = `w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all flex items-center justify-between group topic-card ${topic.id === currentTopicId ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold shadow-lg shadow-blue-500/20' : 'text-slate-400 hover:text-slate-200'}`;
                     
                     item.innerHTML = `
-                        <span class="truncate pr-2 text-xs">${topic.id}</span>
+                        <span class="truncate pr-2 text-xs">${topic.title}</span>
                         <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0 transition-all ${isDone ? 'text-emerald-500' : 'text-slate-600 opacity-30 group-hover:opacity-60'}"></i>
                     `;
                     listContainer.appendChild(item);
@@ -1183,7 +1623,7 @@ HCL = HashiCorp Configuration Language</pre>
             courseData.forEach(w => w.topics.forEach(t => { if(t.id === id) foundTopic = t; }));
             
             if (foundTopic) {
-                document.getElementById('current-topic-title').innerHTML = `${foundTopic.id} ${foundTopic.title}`;
+                document.getElementById('current-topic-title').innerHTML = `${foundTopic.title}`;
                 const displayArea = document.getElementById('view-content');
                 displayArea.innerHTML = `
                     <div class="bg-slate-850 p-8 rounded-2xl border border-slate-700 shadow-xl prose prose-invert max-w-none">
