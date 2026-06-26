@@ -523,6 +523,51 @@
             "lang.en": { de: "EN", en: "EN" },
         };
 
+        // --- Language / i18n ---
+        let currentLang = 'de';
+
+        function detectLanguage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            if (urlLang === 'en' || urlLang === 'de') return urlLang;
+            const stored = localStorage.getItem('lang');
+            if (stored === 'en' || stored === 'de') return stored;
+            return 'de';
+        }
+
+        function translatePage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+            localStorage.setItem('lang', lang);
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (translations[key] && translations[key][lang]) {
+                    el.textContent = translations[key][lang];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.dataset.i18nPlaceholder;
+                if (translations[key] && translations[key][lang]) {
+                    el.placeholder = translations[key][lang];
+                }
+            });
+
+            renderSidebar();
+            const currentId = currentTopicId;
+            if (currentId) loadTopic(currentId);
+            updateFilteredFlashcards();
+            if (filteredFlashcards.length > 0) updateFlashcard(currentFlashcardIndex);
+
+            const toggleBtn = document.getElementById('lang-toggle');
+            if (toggleBtn) toggleBtn.textContent = lang === 'de' ? 'EN' : 'DE';
+        }
+
+        function toggleLanguage() {
+            translatePage(currentLang === 'de' ? 'en' : 'de');
+        }
+
         // Core Course Data (Same Structured Curriculum)
                 const courseData = [
             {
@@ -7066,10 +7111,30 @@
         let completedTopics = JSON.parse(localStorage.getItem('portal_progress')) || {};
 
         function initPortal() {
+            currentLang = detectLanguage();
+            document.documentElement.lang = currentLang === 'en' ? 'en' : 'de';
+
             renderSidebar();
             loadTopic(currentTopicId);
             updateProgressMetrics();
+            updateFilteredFlashcards();
             updateFlashcard();
+
+            // Apply static translations after initial render
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (translations[key] && translations[key][currentLang]) {
+                    el.textContent = translations[key][currentLang];
+                }
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.dataset.i18nPlaceholder;
+                if (translations[key] && translations[key][currentLang]) {
+                    el.placeholder = translations[key][currentLang];
+                }
+            });
+            const toggleBtn = document.getElementById('lang-toggle');
+            if (toggleBtn) toggleBtn.textContent = currentLang === 'de' ? 'EN' : 'DE';
 
             // Attach event listeners after functions are defined
             document.getElementById('btn-view-content').addEventListener('click', () => switchView('content'));
