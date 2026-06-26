@@ -20,4 +20,5 @@ __pycache__/
 # Temp files
 *.tmp
 *.temp
+*.bak
 ~*
