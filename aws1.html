@@ -313,6 +313,196 @@
         .content-card h4 { font-size: 1.125rem; }
         .content-card .text-xs { font-size: 0.8125rem !important; }
 
+        /* Architecture flow diagrams */
+        .arch-region {
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 16px;
+            background: rgba(30, 41, 59, 0.5);
+        }
+        .arch-region-label {
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+        .arch-az-container {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+        .arch-az {
+            flex: 1;
+            max-width: 280px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .arch-az-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fbbf24;
+            text-align: center;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .arch-subnet {
+            background: #334155;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            text-align: center;
+        }
+        .arch-server {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.3), rgba(16, 185, 129, 0.2));
+            border: 1px solid rgba(5, 150, 105, 0.5);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            color: #6ee7b7;
+            font-family: monospace;
+            text-align: center;
+        }
+        .arch-connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 1.25rem;
+            padding: 0 4px;
+        }
+
+        /* Pipeline flow diagrams */
+        .pipeline {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #475569;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        .pipeline-step {
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            text-align: center;
+            min-width: 220px;
+        }
+        .pipeline-step.start {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.15);
+        }
+        .pipeline-step.end {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.15);
+        }
+        .pipeline-arrow {
+            color: #64748b;
+            font-size: 1.1rem;
+            padding: 4px 0;
+            line-height: 1;
+        }
+        .pipeline-desc {
+            color: #94a3b8;
+            font-size: 0.7rem;
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        /* OU Tree diagram */
+        .arch-tree {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #475569;
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 0.85rem;
+        }
+        .tree-root {
+            color: #fbbf24;
+            font-weight: 700;
+            padding: 8px 16px;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .tree-ou {
+            color: #60a5fa;
+            font-weight: 600;
+            padding: 6px 12px;
+            margin: 4px 0 4px 24px;
+            border-left: 2px solid #3b82f6;
+        }
+        .tree-leaf {
+            color: #e2e8f0;
+            padding: 4px 12px;
+            margin: 2px 0 2px 48px;
+            border-left: 2px solid #475569;
+        }
+        .tree-leaf::before {
+            content: "├─ ";
+            color: #64748b;
+        }
+
+        /* SG network flow diagram */
+        .sg-flow {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #475569;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .sg-node {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .sg-node.internet {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid #6366f1;
+            color: #a5b4fc;
+        }
+        .sg-node.group {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+        }
+        .sg-arrow {
+            color: #64748b;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        .sg-anno {
+            width: 100%;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-style: italic;
+            padding: 2px 0;
+        }
+        .sg-anno.right {
+            text-align: right;
+            padding-right: 20px;
+        }
+
         /* Better transitions and animations */
         button {
             transition: all 0.3s ease-in-out;
@@ -790,14 +980,25 @@
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Praxisaufbau: Region Frankfurt mit zwei AZs</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    Region Frankfurt<br>
-    |<br>
-    +-- AZ A: Public Subnet + Private App-Subnet + EC2 A<br>
-    |<br>
-    +-- AZ B: Public Subnet + Private App-Subnet + EC2 B
+  <div class="arch-region mt-2">
+    <div class="arch-region-label">Region Frankfurt</div>
+    <div class="arch-az-container">
+      <div class="arch-az">
+        <div class="arch-az-label">Availability Zone A</div>
+        <div class="arch-subnet">Public Subnet</div>
+        <div class="arch-subnet">Private App-Subnet</div>
+        <div class="arch-server">EC2 A</div>
+      </div>
+      <div class="arch-connector">⇄</div>
+      <div class="arch-az">
+        <div class="arch-az-label">Availability Zone B</div>
+        <div class="arch-subnet">Public Subnet</div>
+        <div class="arch-subnet">Private App-Subnet</div>
+        <div class="arch-server">EC2 B</div>
+      </div>
+    </div>
   </div>
-  <p class="text-xs text-slate-300 mt-2">Fällt nur AZ A aus, kann der Load Balancer Anfragen weiterhin an EC2 B senden. Läuft dagegen alles nur auf einem Server in einer AZ, ist diese AZ ein Single Point of Failure.</p>
+  <p class="text-xs text-slate-300 mt-4">Fällt nur AZ A aus, kann der Load Balancer Anfragen weiterhin an EC2 B senden. Läuft dagegen alles nur auf einem Server in einer AZ, ist diese AZ ein Single Point of Failure.</p>
   <p class="text-xs text-slate-300 mt-2">CloudFront löst ein anderes Problem. Ein Kunde in Spanien muss ein Produktbild nicht jedes Mal aus Frankfurt laden. Das Bild kann an einem Edge-Standort in Kundennähe zwischengespeichert werden.</p>
 </div>
 
@@ -866,14 +1067,25 @@
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Practice Setup: Frankfurt Region with Two AZs</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    Region Frankfurt<br>
-    |<br>
-    +-- AZ A: Public Subnet + Private App-Subnet + EC2 A<br>
-    |<br>
-    +-- AZ B: Public Subnet + Private App-Subnet + EC2 B
+  <div class="arch-region mt-2">
+    <div class="arch-region-label">Region Frankfurt</div>
+    <div class="arch-az-container">
+      <div class="arch-az">
+        <div class="arch-az-label">Availability Zone A</div>
+        <div class="arch-subnet">Public Subnet</div>
+        <div class="arch-subnet">Private App-Subnet</div>
+        <div class="arch-server">EC2 A</div>
+      </div>
+      <div class="arch-connector">⇄</div>
+      <div class="arch-az">
+        <div class="arch-az-label">Availability Zone B</div>
+        <div class="arch-subnet">Public Subnet</div>
+        <div class="arch-subnet">Private App-Subnet</div>
+        <div class="arch-server">EC2 B</div>
+      </div>
+    </div>
   </div>
-  <p class="text-xs text-slate-300 mt-2">If only AZ A fails, the load balancer can still send requests to EC2 B. If everything runs on a single server in one AZ, that AZ becomes a Single Point of Failure.</p>
+  <p class="text-xs text-slate-300 mt-4">If only AZ A fails, the load balancer can still send requests to EC2 B. If everything runs on a single server in one AZ, that AZ becomes a Single Point of Failure.</p>
   <p class="text-xs text-slate-300 mt-2">CloudFront solves a different problem. A customer in Spain does not need to load a product image from Frankfurt every time. The image can be cached at an edge location closer to the customer.</p>
 </div>
 `
@@ -1098,20 +1310,17 @@
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Ablauf: GitHub Actions deployt in AWS</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    GitHub Actions<br>
-    |<br>
-    | authentifiziert sich über vertrauenswürdigen Mechanismus<br>
-    v<br>
-    AWS STS<br>
-    |<br>
-    | gibt kurzlebige Session-Credentials aus<br>
-    v<br>
-    DeployRole im Produktionskonto<br>
-    |<br>
-    | darf nur definierte Deployment-Aktionen ausführen<br>
-    v<br>
-    EC2 / S3 / Terraform-Backend
+  <div class="pipeline mt-2">
+    <div class="pipeline-step start">GitHub Actions</div>
+    <div class="pipeline-arrow">▼</div>
+    <div class="pipeline-desc">authentifiziert sich über vertrauenswürdigen Mechanismus</div>
+    <div class="pipeline-step">AWS STS</div>
+    <div class="pipeline-arrow">▼</div>
+    <div class="pipeline-desc">gibt kurzlebige Session-Credentials aus</div>
+    <div class="pipeline-step">DeployRole im Produktionskonto</div>
+    <div class="pipeline-arrow">▼</div>
+    <div class="pipeline-desc">darf nur definierte Deployment-Aktionen ausführen</div>
+    <div class="pipeline-step end">EC2 / S3 / Terraform-Backend</div>
   </div>
   <p class="text-xs text-slate-400 mt-2">Temporäre Credentials begrenzen den Zeitraum möglichen Missbrauchs, ersetzen aber keine sauber eingeschränkten Berechtigungen.</p>
 </div>`,
@@ -1183,20 +1392,17 @@
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Flow: GitHub Actions deploys to AWS</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    GitHub Actions<br>
-    |<br>
-    | authenticates via trusted mechanism<br>
-    v<br>
-    AWS STS<br>
-    |<br>
-    | issues short-lived session credentials<br>
-    v<br>
-    DeployRole in production account<br>
-    |<br>
-    | may only perform defined deployment actions<br>
-    v<br>
-    EC2 / S3 / Terraform-Backend
+  <div class="pipeline mt-2">
+    <div class="pipeline-step start">GitHub Actions</div>
+    <div class="pipeline-arrow">▼</div>
+    <div class="pipeline-desc">authenticates via trusted mechanism</div>
+    <div class="pipeline-step">AWS STS</div>
+    <div class="pipeline-arrow">▼</div>
+    <div class="pipeline-desc">issues short-lived session credentials</div>
+    <div class="pipeline-step">DeployRole in production account</div>
+    <div class="pipeline-arrow">▼</div>
+    <div class="pipeline-desc">may only perform defined deployment actions</div>
+    <div class="pipeline-step end">EC2 / S3 / Terraform-Backend</div>
   </div>
   <p class="text-xs text-slate-400 mt-2">Temporary credentials limit the window of potential misuse, but do not replace properly scoped permissions.</p>
 </div>
@@ -1310,24 +1516,16 @@
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Beispielaufbau: Organisation mit OUs</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    AWS Organization<br>
-    |<br>
-    +-- Security OU<br>
-    |  |<br>
-    |  +-- Log-Archive Account<br>
-    |  |<br>
-    |  +-- Security-Tools Account<br>
-    |<br>
-    +-- Non-Production OU<br>
-    |  |<br>
-    |  +-- Development Account<br>
-    |  |<br>
-    |  +-- Test Account<br>
-    |<br>
-    +-- Production OU<br>
-       |<br>
-       +-- Shop Production Account
+  <div class="arch-tree mt-2">
+    <div class="tree-root">AWS Organization</div>
+    <div class="tree-ou">Security OU</div>
+    <div class="tree-leaf">Log-Archive Account</div>
+    <div class="tree-leaf">Security-Tools Account</div>
+    <div class="tree-ou">Non-Production OU</div>
+    <div class="tree-leaf">Development Account</div>
+    <div class="tree-leaf">Test Account</div>
+    <div class="tree-ou">Production OU</div>
+    <div class="tree-leaf">Shop Production Account</div>
   </div>
   <p class="text-xs text-slate-300 mt-2">Die Kontentrennung schafft eine harte Grenze. Ein Fehler im Development Account verändert nicht automatisch Ressourcen im Production Account.</p>
 </div>`,
@@ -1434,24 +1632,16 @@
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Example Structure: Organization with OUs</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    AWS Organization<br>
-    |<br>
-    +-- Security OU<br>
-    |  |<br>
-    |  +-- Log-Archive Account<br>
-    |  |<br>
-    |  +-- Security-Tools Account<br>
-    |<br>
-    +-- Non-Production OU<br>
-    |  |<br>
-    |  +-- Development Account<br>
-    |  |<br>
-    |  +-- Test Account<br>
-    |<br>
-    +-- Production OU<br>
-       |<br>
-       +-- Shop Production Account
+  <div class="arch-tree mt-2">
+    <div class="tree-root">AWS Organization</div>
+    <div class="tree-ou">Security OU</div>
+    <div class="tree-leaf">Log-Archive Account</div>
+    <div class="tree-leaf">Security-Tools Account</div>
+    <div class="tree-ou">Non-Production OU</div>
+    <div class="tree-leaf">Development Account</div>
+    <div class="tree-leaf">Test Account</div>
+    <div class="tree-ou">Production OU</div>
+    <div class="tree-leaf">Shop Production Account</div>
   </div>
   <p class="text-xs text-slate-300 mt-2">Account separation creates a hard boundary. A mistake in the Development account does not automatically affect resources in the Production account.</p>
 </div>
@@ -2834,11 +3024,15 @@
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Typical Web Server Setup</h4>
-  <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    Internet -- 443/TCP --&gt; Web-SG -- 3306/TCP --&gt; DB-SG<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(0.0.0.0/0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(only Web-SG)<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;only SSH from<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bastion-SG: 22/TCP
+  <div class="sg-flow mt-2">
+    <div class="sg-node internet">Internet</div>
+    <div class="sg-arrow">443/TCP →</div>
+    <div class="sg-node group">Web-SG</div>
+    <div class="sg-arrow">→ 3306/TCP →</div>
+    <div class="sg-node group">DB-SG</div>
+    <div class="sg-anno">(0.0.0.0/0)</div>
+    <div class="sg-anno">(only Web-SG)</div>
+    <div class="sg-anno right">only SSH from Bastion-SG: 22/TCP</div>
   </div>
   <p class="text-xs text-slate-300 mt-2"><span class="text-amber-400">Note:</span> The DB-SG allows only traffic originating from the Web-SG. Even if an attacker reaches the database subnet, the DB-SG still blocks the traffic.</p>
 </div>
