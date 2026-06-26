@@ -1031,8 +1031,8 @@
   </div>
   <p class="text-xs text-slate-400 mt-2">Temporäre Credentials begrenzen den Zeitraum möglichen Missbrauchs, ersetzen aber keine sauber eingeschränkten Berechtigungen.</p>
 </div>`,
-                          en: `<h3>IAM Roles, STS und Cross-Account Access</h3>
-<p>Rollen ermöglichen sichere, temporäre Zugriffe innerhalb und zwischen AWS-Konten durch STS und Vertrauensbeziehungen.</p>
+                          en: `<h3>IAM Roles, STS and Cross-Account Access</h3>
+<p>Roles enable secure, temporary access within and between AWS accounts through STS and trust relationships.</p>
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Trust Policy vs Permission Policy</h4>
@@ -1041,56 +1041,56 @@
       <thead>
         <tr class="bg-slate-800 text-slate-300">
           <th class="p-2 border border-slate-700 text-left">Policy</th>
-          <th class="p-2 border border-slate-700 text-left">Frage</th>
-          <th class="p-2 border border-slate-700 text-left">Metapher</th>
+          <th class="p-2 border border-slate-700 text-left">Question</th>
+          <th class="p-2 border border-slate-700 text-left">Metaphor</th>
         </tr>
       </thead>
       <tbody>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Trust Policy</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Wer darf die Rolle übernehmen?</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Eingangstür zur Rolle</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Who may assume the role?</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Entry door to the role</td>
         </tr>
         <tr>
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Permission Policy</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Was darf die Rolle nach der Übernahme tun?</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Schlüsselbund nach dem Eintritt</td>
+          <td class="p-2 border border-slate-700 text-slate-300">What may the role do after assuming it?</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Keychain after entry</td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
-    Trust stimmt, Permission fehlt: Rolle kann übernommen werden, API-Aufrufe scheitern<br>
-    Permission wäre ausreichend, Trust stimmt nicht: Rolle kann gar nicht übernommen werden
+    Trust matches, Permission missing: role can be assumed, API calls fail<br>
+    Permission would be sufficient, Trust doesn't match: role cannot be assumed at all
   </div>
 </div>
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
-  <h4 class="text-sm uppercase tracking-wider text-amber-400">Typische Rollen</h4>
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Typical Roles</h4>
   <div class="overflow-x-auto mt-2">
     <table class="w-full text-xs border-collapse">
       <thead>
         <tr class="bg-slate-800 text-slate-300">
-          <th class="p-2 border border-slate-700 text-left">Rolle</th>
-          <th class="p-2 border border-slate-700 text-left">Anwendungsfall</th>
+          <th class="p-2 border border-slate-700 text-left">Role</th>
+          <th class="p-2 border border-slate-700 text-left">Use Case</th>
         </tr>
       </thead>
       <tbody>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">EC2 Instance Role</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Zugriff auf S3 aus einer EC2-Instanz</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Access to S3 from an EC2 instance</td>
         </tr>
         <tr>
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Lambda Execution Role</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Zugriff auf DynamoDB oder CloudWatch Logs</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Access to DynamoDB or CloudWatch Logs</td>
         </tr>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Deployment Role</td>
-          <td class="p-2 border border-slate-700 text-slate-300">CI/CD-Pipeline (z. B. GitHub Actions)</td>
+          <td class="p-2 border border-slate-700 text-slate-300">CI/CD pipeline (e.g., GitHub Actions)</td>
         </tr>
         <tr>
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Cross-Account Audit Role</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Zentrales Security-Konto prüft andere Konten</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Central security account audits other accounts</td>
         </tr>
       </tbody>
     </table>
@@ -1098,23 +1098,23 @@
 </div>
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
-  <h4 class="text-sm uppercase tracking-wider text-amber-400">Ablauf: GitHub Actions deployt in AWS</h4>
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Flow: GitHub Actions deploys to AWS</h4>
   <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
     GitHub Actions<br>
     |<br>
-    | authentifiziert sich über vertrauenswürdigen Mechanismus<br>
+    | authenticates via trusted mechanism<br>
     v<br>
     AWS STS<br>
     |<br>
-    | gibt kurzlebige Session-Credentials aus<br>
+    | issues short-lived session credentials<br>
     v<br>
-    DeployRole im Produktionskonto<br>
+    DeployRole in production account<br>
     |<br>
-    | darf nur definierte Deployment-Aktionen ausführen<br>
+    | may only perform defined deployment actions<br>
     v<br>
     EC2 / S3 / Terraform-Backend
   </div>
-  <p class="text-xs text-slate-400 mt-2">Temporäre Credentials begrenzen den Zeitraum möglichen Missbrauchs, ersetzen aber keine sauber eingeschränkten Berechtigungen.</p>
+  <p class="text-xs text-slate-400 mt-2">Temporary credentials limit the window of potential misuse, but do not replace properly scoped permissions.</p>
 </div>
 `
                         }
@@ -1247,31 +1247,31 @@
   </div>
   <p class="text-xs text-slate-300 mt-2">Die Kontentrennung schafft eine harte Grenze. Ein Fehler im Development Account verändert nicht automatisch Ressourcen im Production Account.</p>
 </div>`,
-                          en: `<h3>AWS Organizations, OUs und SCPs</h3>
-<p>Mit Organizations strukturierst du Konten, definierst OUs und ergänzt Governance per SCPs als globale Guardrails.</p>
+                          en: `<h3>AWS Organizations, OUs and SCPs</h3>
+<p>With Organizations, you structure accounts, define OUs, and add governance via SCPs as global guardrails.</p>
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
-  <h4 class="text-sm uppercase tracking-wider text-amber-400">Organisationsstruktur</h4>
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Organization Structure</h4>
   <div class="overflow-x-auto mt-2">
     <table class="w-full text-xs border-collapse">
       <thead>
         <tr class="bg-slate-800 text-slate-300">
           <th class="p-2 border border-slate-700 text-left">Element</th>
-          <th class="p-2 border border-slate-700 text-left">Beschreibung</th>
+          <th class="p-2 border border-slate-700 text-left">Description</th>
         </tr>
       </thead>
       <tbody>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Management Account</td>
-          <td class="p-2 border border-slate-700 text-slate-300">verwaltet die Organisation und die konsolidierte Abrechnung</td>
+          <td class="p-2 border border-slate-700 text-slate-300">manages the organization and consolidated billing</td>
         </tr>
         <tr>
           <td class="p-2 border border-slate-700 font-medium text-amber-400">OU (Organizational Unit)</td>
-          <td class="p-2 border border-slate-700 text-slate-300">logischer Container für Konten</td>
+          <td class="p-2 border border-slate-700 text-slate-300">logical container for accounts</td>
         </tr>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">SCP (Service Control Policy)</td>
-          <td class="p-2 border border-slate-700 text-slate-300">setzt die maximal erlaubten Aktionen für Root, OU oder Mitgliedskonto</td>
+          <td class="p-2 border border-slate-700 text-slate-300">sets the maximum allowed actions for root, OU, or member account</td>
         </tr>
       </tbody>
     </table>
@@ -1279,35 +1279,35 @@
 </div>
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
-  <h4 class="text-sm uppercase tracking-wider text-amber-400">Warum mehrere Konten?</h4>
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Why Multiple Accounts?</h4>
   <div class="overflow-x-auto mt-2">
     <table class="w-full text-xs border-collapse">
       <thead>
         <tr class="bg-slate-800 text-slate-300">
-          <th class="p-2 border border-slate-700 text-left">Grund</th>
-          <th class="p-2 border border-slate-700 text-left">Nutzen</th>
+          <th class="p-2 border border-slate-700 text-left">Reason</th>
+          <th class="p-2 border border-slate-700 text-left">Benefit</th>
         </tr>
       </thead>
       <tbody>
         <tr class="bg-slate-850">
-          <td class="p-2 border border-slate-700 font-medium text-slate-200">Geringerer Blast Radius</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Ein Fehler im Development-Konto verändert nicht die Produktion</td>
+          <td class="p-2 border border-slate-700 font-medium text-slate-200">Smaller Blast Radius</td>
+          <td class="p-2 border border-slate-700 text-slate-300">A mistake in the Development account does not affect production</td>
         </tr>
         <tr>
-          <td class="p-2 border border-slate-700 font-medium text-slate-200">Getrennte Kosten und Budgets</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Jedes Konto hat eigene Abrechnung und Budgetgrenzen</td>
+          <td class="p-2 border border-slate-700 font-medium text-slate-200">Separate Costs and Budgets</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Each account has its own billing and budget limits</td>
         </tr>
         <tr class="bg-slate-850">
-          <td class="p-2 border border-slate-700 font-medium text-slate-200">Getrennte Umgebungen</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Entwicklung, Test und Produktion sind isoliert</td>
+          <td class="p-2 border border-slate-700 font-medium text-slate-200">Separate Environments</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Development, test, and production are isolated</td>
         </tr>
         <tr>
-          <td class="p-2 border border-slate-700 font-medium text-slate-200">Zentrale Sicherheitskonten</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Logging und Security-Tools in dedizierten Konten</td>
+          <td class="p-2 border border-slate-700 font-medium text-slate-200">Central Security Accounts</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Logging and security tools in dedicated accounts</td>
         </tr>
         <tr class="bg-slate-850">
-          <td class="p-2 border border-slate-700 font-medium text-slate-200">Klarere Compliance-Grenzen</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Compliance-Anforderungen lassen sich pro Konto durchsetzen</td>
+          <td class="p-2 border border-slate-700 font-medium text-slate-200">Clearer Compliance Boundaries</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Compliance requirements can be enforced per account</td>
         </tr>
       </tbody>
     </table>
@@ -1315,41 +1315,41 @@
 </div>
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
-  <h4 class="text-sm uppercase tracking-wider text-amber-400">SCP – Guardrails für Konten</h4>
-  <p class="text-xs text-slate-300 mt-2">Ein SCP erteilt keinen Zugriff. Es setzt nur die Obergrenze. Ein User kann eine Aktion nur ausführen, wenn seine IAM-Rechte sie erlauben <strong class="text-amber-400">UND</strong> kein SCP sie blockiert.</p>
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">SCP – Guardrails for Accounts</h4>
+  <p class="text-xs text-slate-300 mt-2">An SCP does not grant access. It only sets the upper limit. A user can only perform an action if their IAM permissions allow it <strong class="text-amber-400">AND</strong> no SCP blocks it.</p>
   <div class="overflow-x-auto mt-2">
     <table class="w-full text-xs border-collapse">
       <thead>
         <tr class="bg-slate-800 text-slate-300">
           <th class="p-2 border border-slate-700 text-left">Guardrail</th>
-          <th class="p-2 border border-slate-700 text-left">Wirkung</th>
+          <th class="p-2 border border-slate-700 text-left">Effect</th>
         </tr>
       </thead>
       <tbody>
         <tr class="bg-slate-850">
-          <td class="p-2 border border-slate-700 font-medium text-amber-400">Regionen blockieren</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Nutzung unerwünschter Regionen verhindern</td>
+          <td class="p-2 border border-slate-700 font-medium text-amber-400">Block Regions</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Prevent usage of unwanted regions</td>
         </tr>
         <tr>
-          <td class="p-2 border border-slate-700 font-medium text-amber-400">CloudTrail/GuardDuty schützen</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Deaktivieren von CloudTrail oder GuardDuty verhindern</td>
+          <td class="p-2 border border-slate-700 font-medium text-amber-400">Protect CloudTrail/GuardDuty</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Prevent disabling CloudTrail or GuardDuty</td>
         </tr>
         <tr class="bg-slate-850">
-          <td class="p-2 border border-slate-700 font-medium text-amber-400">Organization verlassen</td>
-          <td class="p-2 border border-slate-700 text-slate-300">organizations:LeaveOrganization sperren</td>
+          <td class="p-2 border border-slate-700 font-medium text-amber-400">Leave Organization</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Block organizations:LeaveOrganization</td>
         </tr>
         <tr>
-          <td class="p-2 border border-slate-700 font-medium text-amber-400">Zentrale Logs schützen</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Löschen zentraler Logs verhindern</td>
+          <td class="p-2 border border-slate-700 font-medium text-amber-400">Protect Central Logs</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Prevent deletion of central logs</td>
         </tr>
       </tbody>
     </table>
   </div>
-  <p class="text-xs text-amber-400 mt-2">Merksatz: IAM verteilt Schlüssel innerhalb eines Kontos. SCPs legen fest, welche Türen in einem ganzen Bereich überhaupt geöffnet werden dürfen.</p>
+  <p class="text-xs text-amber-400 mt-2">Key point: IAM distributes keys within an account. SCPs determine which doors in an entire area may be opened at all.</p>
 </div>
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
-  <h4 class="text-sm uppercase tracking-wider text-amber-400">Beispielaufbau: Organisation mit OUs</h4>
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">Example Structure: Organization with OUs</h4>
   <div class="bg-slate-800 p-3 rounded-lg text-xs font-mono text-slate-300 mt-2">
     AWS Organization<br>
     |<br>
@@ -1369,7 +1369,7 @@
        |<br>
        +-- Shop Production Account
   </div>
-  <p class="text-xs text-slate-300 mt-2">Die Kontentrennung schafft eine harte Grenze. Ein Fehler im Development Account verändert nicht automatisch Ressourcen im Production Account.</p>
+  <p class="text-xs text-slate-300 mt-2">Account separation creates a hard boundary. A mistake in the Development account does not automatically affect resources in the Production account.</p>
 </div>
 `
                         }
@@ -1663,59 +1663,59 @@
     </table>
   </div>
 </div>`,
-                          en: `<h3>EC2-Netzwerk, Metadaten und Platzierung</h3>
-<p>EC2-Netzwerk, Instance Metadata und Placement-Entscheidungen bestimmen Erreichbarkeit, Sicherheit und Performance.</p>
+                          en: `<h3>EC2 Networking, Metadata and Placement</h3>
+<p>EC2 networking, Instance Metadata, and Placement decisions determine reachability, security, and performance.</p>
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
-  <h4 class="text-sm uppercase tracking-wider text-amber-400">IP-Adresstypen</h4>
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">IP Address Types</h4>
   <div class="overflow-x-auto mt-2">
     <table class="w-full text-xs border-collapse">
       <thead><tr class="bg-slate-800 text-slate-300">
-        <th class="p-2 border border-slate-700 text-left">Typ</th>
-        <th class="p-2 border border-slate-700 text-left">Eigenschaften</th>
+        <th class="p-2 border border-slate-700 text-left">Type</th>
+        <th class="p-2 border border-slate-700 text-left">Properties</th>
       </tr></thead>
       <tbody>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Private IPv4</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Kommunikation innerhalb der VPC; bleibt über Stop/Start erhalten</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Communication within the VPC; persists across Stop/Start</td>
         </tr>
         <tr>
-          <td class="p-2 border border-slate-700 font-medium text-amber-400">Öffentliche IPv4 (automatisch)</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Internetfähig, kann sich nach Stop/Start ändern</td>
+          <td class="p-2 border border-slate-700 font-medium text-amber-400">Public IPv4 (automatic)</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Internet-capable, may change after Stop/Start</td>
         </tr>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Elastic IP</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Statische öffentliche IPv4, neu zuordenbar</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Static public IPv4, reassignable</td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
 
-<p class="mt-4 text-xs text-slate-400">Browser &rarr; öffentliche Adresse / Load Balancer &rarr; Route &rarr; Subnetz &rarr; ENI &rarr; EC2. In einer sauberen Webarchitektur sind App-Server privat &ndash; nur der Load Balancer ist öffentlich.</p>
+<p class="mt-4 text-xs text-slate-400">Browser &rarr; public address / Load Balancer &rarr; Route &rarr; Subnet &rarr; ENI &rarr; EC2. In a clean web architecture, app servers are private &ndash; only the Load Balancer is public.</p>
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
   <h4 class="text-sm uppercase tracking-wider text-amber-400">Placement Groups</h4>
   <div class="overflow-x-auto mt-2">
     <table class="w-full text-xs border-collapse">
       <thead><tr class="bg-slate-800 text-slate-300">
-        <th class="p-2 border border-slate-700 text-left">Typ</th>
-        <th class="p-2 border border-slate-700 text-left">Ziel</th>
-        <th class="p-2 border border-slate-700 text-left">Typischer Einsatz</th>
+        <th class="p-2 border border-slate-700 text-left">Type</th>
+        <th class="p-2 border border-slate-700 text-left">Goal</th>
+        <th class="p-2 border border-slate-700 text-left">Typical Use</th>
       </tr></thead>
       <tbody>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Cluster</td>
-          <td class="p-2 border border-slate-700 text-slate-300">minimale Latenz und hoher Durchsatz</td>
-          <td class="p-2 border border-slate-700 text-slate-300">HPC, eng gekoppelte Berechnung</td>
+          <td class="p-2 border border-slate-700 text-slate-300">minimal latency and high throughput</td>
+          <td class="p-2 border border-slate-700 text-slate-300">HPC, tightly coupled computation</td>
         </tr>
         <tr>
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Spread</td>
-          <td class="p-2 border border-slate-700 text-slate-300">getrennte Hardware für kritische Instanzen</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Controller, kleine HA-Gruppe</td>
+          <td class="p-2 border border-slate-700 text-slate-300">separate hardware for critical instances</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Controller, small HA group</td>
         </tr>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Partition</td>
-          <td class="p-2 border border-slate-700 text-slate-300">große verteilte Systeme, getrennte Fehlerdomänen</td>
+          <td class="p-2 border border-slate-700 text-slate-300">large distributed systems, separate failure domains</td>
           <td class="p-2 border border-slate-700 text-slate-300">Kafka, Hadoop, Cassandra</td>
         </tr>
       </tbody>
@@ -1724,12 +1724,12 @@
 </div>
 
 <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mt-6">
-  <h4 class="text-sm uppercase tracking-wider text-amber-400">EC2-Zustände</h4>
+  <h4 class="text-sm uppercase tracking-wider text-amber-400">EC2 States</h4>
   <div class="overflow-x-auto mt-2">
     <table class="w-full text-xs border-collapse">
       <thead><tr class="bg-slate-800 text-slate-300">
-        <th class="p-2 border border-slate-700 text-left">Zustand</th>
-        <th class="p-2 border border-slate-700 text-left">Rechenleistung</th>
+        <th class="p-2 border border-slate-700 text-left">State</th>
+        <th class="p-2 border border-slate-700 text-left">Compute</th>
         <th class="p-2 border border-slate-700 text-left">RAM</th>
         <th class="p-2 border border-slate-700 text-left">EBS</th>
         <th class="p-2 border border-slate-700 text-left">Instance Store</th>
@@ -1737,31 +1737,31 @@
       <tbody>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Running</td>
-          <td class="p-2 border border-slate-700 text-slate-300">aktiv</td>
-          <td class="p-2 border border-slate-700 text-slate-300">aktiv</td>
-          <td class="p-2 border border-slate-700 text-slate-300">verfügbar</td>
-          <td class="p-2 border border-slate-700 text-slate-300">verfügbar</td>
+          <td class="p-2 border border-slate-700 text-slate-300">active</td>
+          <td class="p-2 border border-slate-700 text-slate-300">active</td>
+          <td class="p-2 border border-slate-700 text-slate-300">available</td>
+          <td class="p-2 border border-slate-700 text-slate-300">available</td>
         </tr>
         <tr>
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Stopped</td>
-          <td class="p-2 border border-slate-700 text-slate-300">aus</td>
-          <td class="p-2 border border-slate-700 text-slate-300">verloren</td>
-          <td class="p-2 border border-slate-700 text-slate-300">bleibt erhalten</td>
-          <td class="p-2 border border-slate-700 text-slate-300">nicht dauerhaft</td>
+          <td class="p-2 border border-slate-700 text-slate-300">off</td>
+          <td class="p-2 border border-slate-700 text-slate-300">lost</td>
+          <td class="p-2 border border-slate-700 text-slate-300">persists</td>
+          <td class="p-2 border border-slate-700 text-slate-300">not persistent</td>
         </tr>
         <tr class="bg-slate-850">
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Hibernated</td>
-          <td class="p-2 border border-slate-700 text-slate-300">aus</td>
-          <td class="p-2 border border-slate-700 text-slate-300">auf EBS gesichert</td>
-          <td class="p-2 border border-slate-700 text-slate-300">bleibt erhalten</td>
-          <td class="p-2 border border-slate-700 text-slate-300">nicht dauerhaft</td>
+          <td class="p-2 border border-slate-700 text-slate-300">off</td>
+          <td class="p-2 border border-slate-700 text-slate-300">saved to EBS</td>
+          <td class="p-2 border border-slate-700 text-slate-300">persists</td>
+          <td class="p-2 border border-slate-700 text-slate-300">not persistent</td>
         </tr>
         <tr>
           <td class="p-2 border border-slate-700 font-medium text-amber-400">Terminated</td>
-          <td class="p-2 border border-slate-700 text-slate-300">gelöscht</td>
-          <td class="p-2 border border-slate-700 text-slate-300">verloren</td>
-          <td class="p-2 border border-slate-700 text-slate-300">Root meist gelöscht</td>
-          <td class="p-2 border border-slate-700 text-slate-300">verloren</td>
+          <td class="p-2 border border-slate-700 text-slate-300">deleted</td>
+          <td class="p-2 border border-slate-700 text-slate-300">lost</td>
+          <td class="p-2 border border-slate-700 text-slate-300">Root usually deleted</td>
+          <td class="p-2 border border-slate-700 text-slate-300">lost</td>
         </tr>
       </tbody>
     </table>
