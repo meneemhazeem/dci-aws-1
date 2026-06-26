@@ -20,6 +20,7 @@ __pycache__/
 # Project docs
 pdf_content.txt
 docs/
+*.pdf
 
 # Temp files
 *.tmp
